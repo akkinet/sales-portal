@@ -1,4 +1,5 @@
 const { NextResponse } = require("next/server");
+
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export const GET = async (req, {params}) => {
