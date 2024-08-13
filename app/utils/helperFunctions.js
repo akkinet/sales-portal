@@ -10,3 +10,7 @@ export function sortByFeatureCount(products, ascending = true) {
         }
     });
 }
+
+export function sortByTotalPrice(a, b) {
+    return a.totalPrice - b.totalPrice;
+}
