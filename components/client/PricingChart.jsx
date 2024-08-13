@@ -1,28 +1,65 @@
 "use client"
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6"
 import Image from "next/image"
 import { sortByFeatureCount, sortByTotalPrice } from "@/app/utils/helperFunctions"
 
 const PricingChart = ({ packages, suits }) => {
   const [selectedProducts, setSelectedProducts] = useState([])
-  const [group, setGroup] = useState(suits.sort(sortByTotalPrice))
+  const [selectedGroups, setSelectedGroups] = useState([])
+  const [groups, setGroups] = useState(suits.sort(sortByTotalPrice))
   const [products, setProducts] = useState(packages)
-  const [options, setOptions] = useState(Object.fromEntries(suits.map(s => [s.group, false])))
   const [showProducts, setShowProducts] = useState(true)
   const [showOptions, setShowOptions] = useState(true)
-  const packagesOption = packages.map(p => p.category);
+  const packagesOption = useMemo(() => packages.map(p => p.category), [packages])
+  const groupsOption = useMemo(() => suits.sort(sortByTotalPrice).map(p => p.group), [suits]);
 
-  const toggleProduct = product => {
-    setSelectedProducts(prev =>
-      prev.includes(product)
-        ? prev.filter(p => p !== product)
-        : [...prev, product]
-    )
+  const toggleProduct = async product => {
+    const urlSearchParams = new URLSearchParams({
+      category: selectedProducts,
+      group: selectedGroups
+    });
+    let cat;
+    if (selectedProducts.includes(product)) {
+      const inx = selectedProducts.indexOf(product)
+      cat = [...selectedProducts.slice(0, inx), ...selectedProducts.slice(inx + 1)]
+      setSelectedProducts(cat)
+    } else {
+      cat = selectedProducts.concat(product)
+      setSelectedProducts(cat)
+    }
+    urlSearchParams.set("category", cat)
+    const queryString = urlSearchParams.toString();
+    let p_data = await fetch(`/api/packages?${queryString}`);
+    p_data = await p_data.json();
+    setProducts(p_data)
+    let g_data = await fetch(`/api/suits?${queryString}`);
+    g_data = await g_data.json();
+    setGroups(g_data)
   }
 
-  const toggleOption = option => {
-    setOptions(prev => ({ ...prev, [option]: !prev[option] }))
+  const toggleOption = async group => {
+    const urlSearchParams = new URLSearchParams({
+      category: selectedProducts,
+      group: selectedGroups
+    });
+    let grp;
+    if (selectedGroups.includes(group)) {
+      const inx = selectedGroups.indexOf(group)
+      grp = [...selectedGroups.slice(0, inx), ...selectedGroups.slice(inx + 1)]
+      setSelectedGroups(grp)
+    } else {
+      grp = selectedGroups.concat(group)
+      setSelectedGroups(grp)
+    }
+    urlSearchParams.set("group", grp)
+    const queryString = urlSearchParams.toString();
+    let p_data = await fetch(`/api/packages?${queryString}`);
+    p_data = await p_data.json();
+    setProducts(p_data)
+    let g_data = await fetch(`/api/suits?${queryString}`);
+    g_data = await g_data.json();
+    setGroups(g_data)
   }
 
   const toggleProductsVisibility = () => {
@@ -78,14 +115,14 @@ const PricingChart = ({ packages, suits }) => {
           </div>
           {showOptions && (
             <div className="space-y-2">
-              {Object.keys(options).map(option => (
+              {groupsOption.map(option => (
                 <label
                   key={option}
                   className="flex items-center justify-between space-x-2 bg-pink-600 p-2 text-white"
                 >
                   <input
                     type="checkbox"
-                    checked={options[option]}
+                    checked={selectedGroups.includes(option)}
                     onChange={() => toggleOption(option)}
                     className="form-checkbox text-pink-500 h-6 w-6"
                   />
@@ -99,18 +136,19 @@ const PricingChart = ({ packages, suits }) => {
       <div className="right-container lg:w-[80%] w-full p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4">
           <div className="text-center text-2xl text-white p-3"></div>
-          {group?.map((g, i) => <div key={i} className="text-center text-2xl bg-cyan-600 text-white p-3">
+          {groups?.map((g, i) => <div key={i} className="text-center text-2xl bg-cyan-600 text-white p-3">
             {g.group}
           </div>)}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-1 pb-4 ">
           <div className="text-center text-2xl text-white p-3"></div>
-          {group?.map((g, i) => <div key={i} className="relative text-center ">
+          {groups?.map((g, i) => <div key={i} className="relative text-center ">
             <Image
               src="https://res.cloudinary.com/dduiqwdtr/image/upload/v1723184590/Hexerve%20website%20assets/trianglePink.png"
               alt="Triangle Pink"
               width={350}
               height={100}
+              priority
               className="w-full"
             />
             <div className="absolute inset-0 flex flex-col justify-center items-center text-white lg: text-md ">
@@ -120,26 +158,31 @@ const PricingChart = ({ packages, suits }) => {
         </div>
         <table>
           {products?.map(p =>
-            <>
-              <tr key={JSON.stringify(p)}>
-                <th>{p.category}</th>
-                {(sortByFeatureCount(p.products)).map(pro => <th key={JSON.stringify(pro.name)}>
-                  {pro.name}
-                </th>)}
-              </tr>
-              {Array.from(new Set(p.products.map(p => p.features).flat())).map(i => <tr key={i}>
-                <td>{i}</td>
-                {(sortByFeatureCount(p.products)).map(pro => <td key={JSON.stringify(pro)}>
-                  <div
-                    className="col-span-1 border flex justify-center items-center mb-1 bg-gray-100"
-                  >
-                    {pro.features.includes(i) ? <span className="text-green-500 text-2xl">✔️</span>
-                      : <span className="text-red-500 text-2xl">❌</span>
-                    }
-                  </div>
-                </td>)}
-              </tr>)}
-            </>
+            <React.Fragment key={JSON.stringify(p)}>
+              <thead>
+                <tr>
+                  <th>{p.category}</th>
+                  {(sortByFeatureCount(p.products)).map(pro => <th key={JSON.stringify(pro.name)}>
+                    {pro.name}
+                  </th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {Array.from(new Set(p.products.map(p => p.features).flat())).map(i =>
+                  <tr key={i}>
+                    <td>{i}</td>
+                    {(sortByFeatureCount(p.products)).map(pro => <td key={JSON.stringify(pro)}>
+                      <div
+                        className="col-span-1 border flex justify-center items-center mb-1 bg-gray-100"
+                      >
+                        {pro.features.includes(i) ? <span className="text-green-500 text-2xl">✔️</span>
+                          : <span className="text-red-500 text-2xl">❌</span>
+                        }
+                      </div>
+                    </td>)}
+                  </tr>)}
+              </tbody>
+            </React.Fragment>
           )}
 
         </table>
@@ -150,15 +193,15 @@ const PricingChart = ({ packages, suits }) => {
             <p>Results</p>
           </div>
           {
-            group?.map(g => <div key={g.group} className="text-center text-lg bg-cyan-600 text-white p-3">
+            groups?.map(g => <div key={g.group} className="text-center text-lg bg-cyan-600 text-white p-3">
               <p>{g.expectedOutput}</p>
             </div>)
           }
         </div>
-        {group.length > 0 && (
+        {groups.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-1">
             <div className="col-span-1 flex justify-center bg-cyan-600 p-7"></div>
-            {group?.map(g => <div key={g.group} className="col-span-1 flex justify-center bg-cyan-600 p-2">
+            {groups?.map(g => <div key={g.group} className="col-span-1 flex justify-center bg-cyan-600 p-2">
               <button onClick={() => checkOutHandler(g.paymentLink)} className="bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700">
                 Buy Now
               </button>
