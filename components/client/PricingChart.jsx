@@ -71,7 +71,7 @@ const PricingChart = ({ packages, suits }) => {
   }
 
   const checkOutHandler = async (payLink) => {
-
+    window.location.href = payLink
   }
 
   return (
