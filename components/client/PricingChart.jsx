@@ -62,6 +62,17 @@ const PricingChart = ({ packages, suits }) => {
     setGroups(g_data)
   }
 
+  async function clearFilter() {
+    setSelectedGroups([])
+    setSelectedProducts([])
+    let p_data = await fetch(`/api/packages`);
+    p_data = await p_data.json();
+    setProducts(p_data)
+    let g_data = await fetch(`/api/suits`);
+    g_data = await g_data.json();
+    setGroups(g_data)
+  }
+
   const toggleProductsVisibility = () => {
     setShowProducts(!showProducts)
   }
@@ -83,7 +94,14 @@ const PricingChart = ({ packages, suits }) => {
   return (
     <div className="flex flex-col lg:flex-row bg-gray-300">
       <div className="lg:w-[20%] p-4 bg-gray-200">
-        <h2 className="text-2xl font-semibold mb-4 text-cyan-600">Filter</h2>
+        <div className="flex flex-row justify-between">
+          <div>
+            <h2 className="text-2xl font-semibold mb-4 text-cyan-600">Filter</h2>
+          </div>
+          <div>
+            {(selectedProducts.length > 0 || selectedGroups.length > 0) && <h2 onClick={clearFilter} className="text-2xl font-semibold mb-4 text-cyan-600 cursor-pointer">Clear Filter</h2>}
+          </div>
+        </div>
         <div className="mb-8">
           <div
             className="bg-cyan-600 text-white p-2 flex items-center justify-between mb-2 cursor-pointer"
