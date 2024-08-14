@@ -18,6 +18,8 @@ const PricingChart = ({ packages, suits }) => {
   const packagesOption = useMemo(() => packages.map(p => p.category), [])
 
   const groupsOption = useMemo(() => groups.map(p => p.group), [])
+  const featuresOption = useMemo(() => packages.map(p => ({ packages: p.products, category: p.category })).map(p => ({ features: Array.from(new Set(p.packages.map(pp => pp.features).flat())), category: p.category })), []);
+  const [selectedFeatures, setSelectedFeatures] = useState(featuresOption)
 
   const toggleProduct = async product => {
     const urlSearchParams = new URLSearchParams({
@@ -31,15 +33,22 @@ const PricingChart = ({ packages, suits }) => {
         ...selectedProducts.slice(0, inx),
         ...selectedProducts.slice(inx + 1)
       ]
-      setSelectedProducts(cat)
     } else {
       cat = selectedProducts.concat(product)
-      setSelectedProducts(cat)
     }
+    setSelectedProducts(cat)
     urlSearchParams.set("category", cat)
     const queryString = urlSearchParams.toString()
     let p_data = await fetch(`/api/packages?${queryString}`)
     p_data = await p_data.json()
+    const features = featuresOption.filter(f => cat.includes(f.category))
+    const packOrder = p_data.map(p => p.category)
+    const reorderedData = features.sort((a, b) => {
+      const indexA = packOrder.indexOf(a.category);
+      const indexB = packOrder.indexOf(b.category);
+      return indexA - indexB;
+    });
+    setSelectedFeatures(reorderedData)
     setProducts(p_data)
     let g_data = await fetch(`/api/suits?${queryString}`)
     g_data = await g_data.json()
@@ -64,10 +73,17 @@ const PricingChart = ({ packages, suits }) => {
     const queryString = urlSearchParams.toString()
     let p_data = await fetch(`/api/packages?${queryString}`)
     p_data = await p_data.json()
+    const packOrder = p_data.map(p => p.category)
+    const features = featuresOption.filter(f => packOrder.includes(f.category))
+    const reorderedData = features.sort((a, b) => {
+      const indexA = packOrder.indexOf(a.category);
+      const indexB = packOrder.indexOf(b.category);
+      return indexA - indexB;
+    });
+    setSelectedFeatures(reorderedData)
     setProducts(p_data)
     let g_data = await fetch(`/api/suits?${queryString}`)
     g_data = await g_data.json();
-    console.log(g_data);
     setGroups(g_data.sort(sortByTotalPrice))
   }
 
@@ -89,6 +105,14 @@ const PricingChart = ({ packages, suits }) => {
     window.location.href = payLink.url
   }
 
+  const clearFilter = async () => {
+    setSelectedFeatures(featuresOption)
+    setSelectedProducts([])
+    setSelectedGroups([])
+    setProducts(packages)
+    setGroups(suits.sort(sortByTotalPrice))
+  }
+
   return (
     <div className="flex flex-col lg:flex-row bg-gray-300">
       <div className="lg:w-[20%] p-4 bg-gray-200">
@@ -97,7 +121,7 @@ const PricingChart = ({ packages, suits }) => {
             <h2 className="text-2xl font-semibold mb-4 text-cyan-600">Filter</h2>
           </div>
           <div>
-            {(selectedProducts.length > 0 || selectedGroups.length > 0) && <h2 className="text-2xl font-semibold mb-4 text-cyan-600 cursor-pointer">Clear Filter</h2>}
+            {(selectedProducts.length > 0 || selectedGroups.length > 0) && <h2 onClick={clearFilter} className="text-2xl font-semibold mb-4 text-cyan-600 cursor-pointer">Clear Filter</h2>}
           </div>
         </div>
         <div className="mb-8">
@@ -187,7 +211,7 @@ const PricingChart = ({ packages, suits }) => {
           ))}
         </div>
         <div className="overflow-x-auto">
-          {products?.map(p => (
+          {products?.map((p, inx) => (
             <React.Fragment key={JSON.stringify(p)}>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4">
                 <div className="col-span-1 text-center text-2xl bg-cyan-600 text-white p-3">
@@ -202,8 +226,29 @@ const PricingChart = ({ packages, suits }) => {
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-1 border-t">
+              {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-1 border-t">
                 {Array.from(new Set(p.products.map(p => p.features).flat())).map(i => (
+                  <React.Fragment key={i}>
+                    <div className="col-span-1 text-center font-semibold p-3 bg-gray-100 mb-1">
+                      {i}
+                    </div>
+                    {sortByFeatureCount(p.products).map(pro => (
+                      <div
+                        key={JSON.stringify(pro)}
+                        className="col-span-1 border flex justify-center items-center mb-1 bg-gray-100"
+                      >
+                        {pro.features.includes(i) ? (
+                          <span className="text-green-500 text-2xl">✔️</span>
+                        ) : (
+                          <span className="text-red-500 text-2xl">❌</span>
+                        )}
+                      </div>
+                    ))}
+                  </React.Fragment>
+                ))}
+              </div> */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-1 border-t">
+                {selectedFeatures[inx]?.features.map(i => (
                   <React.Fragment key={i}>
                     <div className="col-span-1 text-center font-semibold p-3 bg-gray-100 mb-1">
                       {i}
