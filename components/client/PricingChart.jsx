@@ -70,8 +70,14 @@ const PricingChart = ({ packages, suits }) => {
     setShowOptions(!showOptions)
   }
 
-  const checkOutHandler = async (payLink) => {
-    window.location.href = payLink
+  const checkOutHandler = async (prices) => {
+    const res = await fetch('/api/payment', {
+      method: "POST",
+      body: JSON.stringify(prices)
+    })
+    const payLink = await res.json()
+
+    window.location.href = payLink.url
   }
 
   return (
@@ -202,7 +208,7 @@ const PricingChart = ({ packages, suits }) => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-1">
             <div className="col-span-1 flex justify-center bg-cyan-600 p-7"></div>
             {groups?.map(g => <div key={g.group} className="col-span-1 flex justify-center bg-cyan-600 p-2">
-              <button onClick={() => checkOutHandler(g.paymentLink)} className="bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700">
+              <button onClick={() => checkOutHandler(g.prices)} className="bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700">
                 Buy Now
               </button>
             </div>)}

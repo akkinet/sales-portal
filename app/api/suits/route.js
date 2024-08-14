@@ -56,14 +56,6 @@ export const GET = async (req) => {
 
     const suits = await Product.aggregate(pipeline);
 
-    for (const suit of suits) {
-      const line_items = suit.prices.map(i => ({ price: i, quantity: 1 }))
-      const paymentLink = await stripe.paymentLinks.create({
-        line_items
-      });
-      suit.paymentLink = paymentLink.url;
-    }
-
     return NextResponse.json(suits, { status: 200 });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
