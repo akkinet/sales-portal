@@ -11,8 +11,10 @@ const PricingChart = ({ packages, suits }) => {
   const [products, setProducts] = useState(packages)
   const [showProducts, setShowProducts] = useState(true)
   const [showOptions, setShowOptions] = useState(true)
-  const packagesOption = useMemo(() => packages.map(p => p.category), [packages])
-  const groupsOption = useMemo(() => suits.sort(sortByTotalPrice).map(p => p.group), [suits]);
+  const packagesOption = useMemo(() => packages.map(p => p.category), [])
+  const groupsOption = useMemo(() => suits.sort(sortByTotalPrice).map(p => p.group), []);
+  const features = useMemo(() => packages.map(p => p.products).map(p => Array.from(new Set(p.map(pp => pp.features).flat()))), []);
+  const [slcFeature, setSlcFeature] = useState(features)
 
   const toggleProduct = async product => {
     const urlSearchParams = new URLSearchParams({
@@ -33,9 +35,10 @@ const PricingChart = ({ packages, suits }) => {
     let p_data = await fetch(`/api/packages?${queryString}`);
     p_data = await p_data.json();
     setProducts(p_data)
+    setSlcFeature(packages.map(p => p.products).map(p => Array.from(new Set(p.map(pp => pp.features).flat()))))
     let g_data = await fetch(`/api/suits?${queryString}`);
     g_data = await g_data.json();
-    setGroups(g_data)
+    setGroups(g_data.sort(sortByTotalPrice))
   }
 
   const toggleOption = async group => {
@@ -59,7 +62,7 @@ const PricingChart = ({ packages, suits }) => {
     setProducts(p_data)
     let g_data = await fetch(`/api/suits?${queryString}`);
     g_data = await g_data.json();
-    setGroups(g_data)
+    setGroups(g_data.sort(sortByTotalPrice))
   }
 
   async function clearFilter() {
@@ -181,7 +184,7 @@ const PricingChart = ({ packages, suits }) => {
           </div>)}
         </div>
         <table>
-          {products?.map(p =>
+          {products?.map((p, i) =>
             <React.Fragment key={JSON.stringify(p)}>
               <thead>
                 <tr>
@@ -192,7 +195,7 @@ const PricingChart = ({ packages, suits }) => {
                 </tr>
               </thead>
               <tbody>
-                {Array.from(new Set(p.products.map(p => p.features).flat())).map(i =>
+                {/* {Array.from(new Set(p.products.map(p => p.features).flat())).map(i =>
                   <tr key={i}>
                     <td>{i}</td>
                     {(sortByFeatureCount(p.products)).map(pro => <td key={JSON.stringify(pro)}>
@@ -200,6 +203,19 @@ const PricingChart = ({ packages, suits }) => {
                         className="col-span-1 border flex justify-center items-center mb-1 bg-gray-100"
                       >
                         {pro.features.includes(i) ? <span className="text-green-500 text-2xl">✔️</span>
+                          : <span className="text-red-500 text-2xl">❌</span>
+                        }
+                      </div>
+                    </td>)}
+                  </tr>)} */}
+                {slcFeature[i].map(fh =>
+                  <tr key={fh}>
+                    <td>{fh}</td>
+                    {(sortByFeatureCount(p.products)).map(pro => <td key={JSON.stringify(pro)}>
+                      <div
+                        className="col-span-1 border flex justify-center items-center mb-1 bg-gray-100"
+                      >
+                        {pro.features.includes(fh) ? <span className="text-green-500 text-2xl">✔️</span>
                           : <span className="text-red-500 text-2xl">❌</span>
                         }
                       </div>
