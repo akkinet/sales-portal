@@ -6,7 +6,9 @@ const productSchema = new mongoose.Schema({
     description: String,
     features: [String],
     price: Number,
-    group: String
+    group: String,
+    product_id: String,
+    price_id: String
 })
 
 export default mongoose.models.Product || mongoose.model("Product", productSchema);

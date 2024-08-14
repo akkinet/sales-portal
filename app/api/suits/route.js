@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 
 export const GET = async (req) => {
   try {
+    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
     const { searchParams } = new URL(req.url);
     await dbConnect();
 
@@ -12,6 +13,7 @@ export const GET = async (req) => {
           _id: "$group",
           totalPrice: { $sum: "$price" },
           descriptions: { $push: "$description" },
+          prices: { $push: "$price_id" },
         },
       },
       {
@@ -19,6 +21,7 @@ export const GET = async (req) => {
           _id: 0,
           group: "$_id",
           totalPrice: 1,
+          prices: 1,
           expectedOutput: {
             $reduce: {
               input: "$descriptions",
