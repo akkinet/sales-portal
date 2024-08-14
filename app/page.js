@@ -1,4 +1,4 @@
-import Dashboard from "@/components/server/Dashboard"
+import Dashboard from "../components/server/Dashboard"
 
 function page() {
   return (
