@@ -236,55 +236,56 @@ const PricingChart = ({ packages, suits }) => {
           ))}
         </div>
 
-
         <div className='overflow-x-auto'>
-  {products?.map((p, inx) => (
-    <React.Fragment key={JSON.stringify(p)}>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
-        <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3'>
-          {p.category}
-        </div>
-        {sortByFeatureCount(p.products).map(pro => (
-          <div
-            key={JSON.stringify(pro.name)}
-            className='text-center text-2xl bg-cyan-600 text-white p-3'
-          >
-            {pro.name}
-          </div>
-        ))}
-      </div>
-      <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
-        <div className='col-span-1 bg-gray-100'>
-          {selectedFeatures[inx]?.features.map(i => (
-            <div
-              key={i}
-              className='text-center font-semibold p-3 mb-1 border-b'
-            >
-              {i}
-            </div>
+          {products?.map((p, inx) => (
+            <React.Fragment key={JSON.stringify(p)}>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
+                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3'>
+                  {p.category}
+                </div>
+                {sortByFeatureCount(p.products).map(pro => (
+                  <div
+                    key={JSON.stringify(pro.name)}
+                    className='text-center text-2xl bg-cyan-600 text-white p-3'
+                  >
+                    {pro.name}
+                  </div>
+                ))}
+              </div>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
+                <div className='col-span-1 bg-gray-100'>
+                  {selectedFeatures[inx]?.features.map(i => (
+                    <div
+                      key={i}
+                      className='text-center font-semibold p-3 mb-1 border-b'
+                    >
+                      {i}
+                    </div>
+                  ))}
+                </div>
+                {sortByFeatureCount(p.products).map(pro => (
+                  <div
+                    key={JSON.stringify(pro)}
+                    className='col-span-1 bg-gray-100'
+                  >
+                    {selectedFeatures[inx]?.features.map(i => (
+                      <div
+                        key={i}
+                        className='flex justify-center items-center p-3 mb-1 border-b'
+                      >
+                        {pro.features.includes(i) ? (
+                          <div className='text-green-500 text-2xl'>✔️</div>
+                        ) : (
+                          <div className='text-red-500 text-2xl'>❌</div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </React.Fragment>
           ))}
         </div>
-        {sortByFeatureCount(p.products).map(pro => (
-          <div key={JSON.stringify(pro)} className='col-span-1 bg-gray-100'>
-            {selectedFeatures[inx]?.features.map(i => (
-              <div
-                key={i}
-                className='flex justify-center items-center p-3 mb-1 border-b'
-              >
-                {pro.features.includes(i) ? (
-                  <div className='text-green-500 text-2xl'>✔️</div>
-                ) : (
-                  <div className='text-red-500 text-2xl'>❌</div>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-    </React.Fragment>
-  ))}
-</div>
-
 
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4'>
           <div className='text-center text-4xl bg-cyan-600 text-white p-3 h-[25vh] font-bold leading-snug'>
