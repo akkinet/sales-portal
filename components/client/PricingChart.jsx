@@ -3,8 +3,8 @@ import React, { useState, useMemo } from 'react'
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6'
 import Image from 'next/image'
 import {
-  sortByFeatureCount,
-  sortByTotalPrice
+  sortByTotalPrice,
+  sortByFeatureCount
 } from '../../app/utils/helperFunctions'
 
 const PricingChart = ({ packages, suits }) => {
@@ -111,6 +111,14 @@ const PricingChart = ({ packages, suits }) => {
     setShowOptions(!showOptions)
   }
 
+  const clearFilter = async () => {
+    setSelectedFeatures(featuresOption)
+    setSelectedProducts([])
+    setSelectedGroups([])
+    setProducts(packages)
+    setGroups(suits.sort(sortByTotalPrice))
+  }
+
   const checkOutHandler = async prices => {
     const res = await fetch('/api/payment', {
       method: 'POST',
@@ -119,14 +127,6 @@ const PricingChart = ({ packages, suits }) => {
     const payLink = await res.json()
 
     window.location.href = payLink.url
-  }
-
-  const clearFilter = async () => {
-    setSelectedFeatures(featuresOption)
-    setSelectedProducts([])
-    setSelectedGroups([])
-    setProducts(packages)
-    setGroups(suits.sort(sortByTotalPrice))
   }
 
   return (
@@ -204,6 +204,8 @@ const PricingChart = ({ packages, suits }) => {
           )}
         </div>
       </div>
+      {/* right container component  */}
+      {/* <Price groups={groups} products={products} selectedFeatures={selectedFeatures} /> */}
       <div className='right-container lg:w-[80%] w-full p-4'>
         {/* Shared container for aligning upper and lower sections */}
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
@@ -229,7 +231,7 @@ const PricingChart = ({ packages, suits }) => {
                 priority
                 className='w-full'
               />
-              <div className='absolute inset-0 flex flex-col justify-center items-center text-white lg:text-md'>
+              <div className='absolute  inset-0 flex flex-col justify-center items-center text-white lg:text-md text-xl'>
                 <span>$ {g.totalPrice} Per Month </span>
               </div>
             </div>
