@@ -41,7 +41,12 @@ const PricingChart = ({ packages, suits }) => {
     const queryString = urlSearchParams.toString()
     let p_data = await fetch(`/api/packages?${queryString}`)
     p_data = await p_data.json()
-    const features = featuresOption.filter(f => cat.includes(f.category))
+    let features = []
+    if(cat.length > 0){
+      features = featuresOption.filter(f => cat.includes(f.category))
+    }else{
+      features = [...featuresOption]
+    }
     const packOrder = p_data.map(p => p.category)
     const reorderedData = features.sort((a, b) => {
       const indexA = packOrder.indexOf(a.category);
