@@ -4,7 +4,6 @@ import Product from "../../../models/product";
 
 export const GET = async (req) => {
   try {
-    const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
     const { searchParams } = new URL(req.url);
     await dbConnect();
 
