@@ -111,6 +111,15 @@ const PricingChart = ({ packages, suits }) => {
     setShowOptions(!showOptions)
   }
 
+  const copyUrlHandler = () => {
+    const urlSearchParams = new URLSearchParams({
+      category: selectedProducts?.split(',') || '',
+      group: selectedGroups?.split(',') || ''
+    })
+    const queryString = urlSearchParams.toString()
+    console.log(`${window.location.origin}/price?${queryString}`)
+  }
+
   const clearFilter = async () => {
     setSelectedFeatures(featuresOption)
     setSelectedProducts([])
@@ -131,6 +140,7 @@ const PricingChart = ({ packages, suits }) => {
 
   return (
     <div className='flex flex-col lg:flex-row bg-gray-300'>
+      {/* left container component */}
       <div className='lg:w-[20%] p-4 bg-gray-200'>
         <div className='flex flex-row justify-between'>
           <div>
@@ -203,9 +213,11 @@ const PricingChart = ({ packages, suits }) => {
             </div>
           )}
         </div>
+
+        <button onClick={copyUrlHandler} className='ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-black hover:bg-gray-400 rounded-md'>Copy URL</button>
+      
       </div>
       {/* right container component  */}
-      {/* <Price groups={groups} products={products} selectedFeatures={selectedFeatures} /> */}
       <div className='right-container lg:w-[80%] w-full p-4'>
         {/* Shared container for aligning upper and lower sections */}
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
