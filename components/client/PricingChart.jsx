@@ -113,11 +113,11 @@ const PricingChart = ({ packages, suits }) => {
 
   const copyUrlHandler = () => {
     const urlSearchParams = new URLSearchParams({
-      category: selectedProducts?.split(',') || '',
-      group: selectedGroups?.split(',') || ''
+      category: selectedProducts,
+      group: selectedGroups
     })
     const queryString = urlSearchParams.toString()
-    console.log(`${window.location.origin}/price?${queryString}`)
+    navigator.clipboard.writeText(`${window.location.origin}/price?${queryString}`)
   }
 
   const clearFilter = async () => {
