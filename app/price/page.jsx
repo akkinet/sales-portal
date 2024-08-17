@@ -26,14 +26,22 @@ const Price = () => {
     g_data = await g_data.json()
     let pack = await fetch(`/api/packages`)
     pack = await pack.json()
-    setSelectedFeatures(pack
-      .map(p => ({ packages: p.products, category: p.category }))
-      .map(p => ({
-        features: Array.from(
-          new Set(p.packages.map(pp => pp.features).flat())
-        ),
-        category: p.category
-      })))
+    let features = pack
+    .map(p => ({ packages: p.products, category: p.category }))
+    .map(p => ({
+      features: Array.from(
+        new Set(p.packages.map(pp => pp.features).flat())
+      ),
+      category: p.category
+    }))
+    const packOrder = p_data.map(p => p.category)
+    features = features.filter(f => packOrder.includes(f.category))
+    const reorderedData = features.sort((a, b) => {
+      const indexA = packOrder.indexOf(a.category)
+      const indexB = packOrder.indexOf(b.category)
+      return indexA - indexB
+    })
+    setSelectedFeatures(reorderedData)
     setProducts(p_data)
     setGroups(g_data)
   }
