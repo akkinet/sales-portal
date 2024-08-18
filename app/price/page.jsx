@@ -67,14 +67,15 @@ if (isLoading)
   return <div>Loading...</div>
 
 return (
-  <div className='right-container lg:w-[80%] w-full p-4'>
+  <div className='flex justify-center items-center w-full h-full p-4'>
+  <div className='right-container lg:w-[80%] w-full p-4 border-2 border-cyan-600 rounded-2xl bg-gray-200'>
     {/* Shared container for aligning upper and lower sections */}
     <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-      <div className='text-center text-2xl text-white p-3'></div>
+      <div className='text-center text-2xl text-white p-3 '></div>
       {groups?.map((g, i) => (
         <div
           key={i}
-          className='text-center text-2xl bg-cyan-600 text-white p-3'
+          className='text-center text-2xl bg-cyan-600 text-white p-3 '
         >
           {g.group}
         </div>
@@ -116,11 +117,11 @@ return (
             ))}
           </div>
           <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
-            <div className='col-span-1 bg-gray-100'>
+            <div className='col-span-1 bg-gray-100 h-[97%]'>
               {selectedFeatures[inx]?.features.map(i => (
                 <div
                   key={i}
-                  className='text-center font-semibold p-3 mb-1 border-b'
+                  className='text-center font-semibold p-3 py-4 mb-1 border-b-2 capitalize'
                 >
                   {i}
                 </div>
@@ -129,12 +130,12 @@ return (
             {sortByFeatureCount(p.products).map(pro => (
               <div
                 key={JSON.stringify(pro)}
-                className='col-span-1 bg-gray-100'
+                className='col-span-1 bg-gray-100 h-[97%]'
               >
                 {selectedFeatures[inx]?.features.map(i => (
                   <div
                     key={i}
-                    className='flex justify-center items-center p-3 mb-1 border-b'
+                    className='flex justify-center items-center p-3 mb-1 border-b-2'
                   >
                     {pro.features.includes(i) ? (
                       <div className='text-green-500 text-2xl'>✔️</div>
@@ -181,6 +182,7 @@ return (
         </div>
       ))}
     </div>
+  </div>
   </div>
 )
 }
