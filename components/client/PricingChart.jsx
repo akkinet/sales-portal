@@ -214,7 +214,7 @@ const PricingChart = ({ packages, suits }) => {
           )}
         </div>
 
-        <button onClick={copyUrlHandler} className='ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-black hover:bg-gray-400 rounded-md'>Copy URL</button>
+        <button onClick={copyUrlHandler} className='ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md'>Copy URL</button>
       
       </div>
       {/* right container component  */}
@@ -266,12 +266,12 @@ const PricingChart = ({ packages, suits }) => {
                   </div>
                 ))}
               </div>
-              <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
-                <div className='col-span-1 bg-gray-100'>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
+                <div className='col-span-1 bg-gray-100 h-[97%]'>
                   {selectedFeatures[inx]?.features.map(i => (
                     <div
                       key={i}
-                      className='text-center font-semibold px-3 py-4 mb-1 border-b capitalize'
+                      className='text-center font-semibold px-3 py-4 mb-1 border-b-2 capitalize'
                     >
                       {i}
                     </div>
@@ -280,12 +280,12 @@ const PricingChart = ({ packages, suits }) => {
                 {sortByFeatureCount(p.products).map(pro => (
                   <div
                     key={JSON.stringify(pro)}
-                    className='col-span-1 bg-gray-100'
+                    className='col-span-1 bg-gray-100 h-[97%]'
                   >
                     {selectedFeatures[inx]?.features.map(i => (
                       <div
                         key={i}
-                        className='flex justify-center items-center p-3 mb-1 border-b'
+                        className='flex justify-center items-center p-3 mb-1 border-b-2 '
                       >
                         {pro.features.includes(i) ? (
                           <div className='text-green-500 text-2xl'>✔️</div>
