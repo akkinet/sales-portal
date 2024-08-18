@@ -271,7 +271,7 @@ const PricingChart = ({ packages, suits }) => {
                   {selectedFeatures[inx]?.features.map(i => (
                     <div
                       key={i}
-                      className='text-center font-semibold p-3 mb-1 border-b'
+                      className='text-center font-semibold px-3 py-4 mb-1 border-b capitalize'
                     >
                       {i}
                     </div>
