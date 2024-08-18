@@ -149,18 +149,19 @@ const Price = () => {
     <div className='flex justify-center items-center w-full h-full p-4'>
       <div className='right-container lg:w-[80%] w-full p-4 border-2 border-cyan-600 rounded-2xl bg-gray-200'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-          <div className='text-center text-2xl text-white p-3 '></div>
+          <div className='text-center text-2xl text-white p-3 capitalize bg-cyan-600'></div>
           {groups?.map((g, i) => (
             <div
               key={i}
-              className='text-center text-2xl bg-cyan-600 text-white p-3 '
+              className='text-center text-2xl bg-cyan-600 text-white p-3 capitalize'
             >
               {g.group}
             </div>
           ))}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-          <div className='text-center text-2xl text-white p-3'></div>
+        <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-6 '>Client's <br />Page</div>
+
           {groups?.map((g, i) => (
             <div key={i} className='relative text-center'>
               <Image

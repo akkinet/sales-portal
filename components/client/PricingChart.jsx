@@ -161,7 +161,7 @@ const PricingChart = ({ packages, suits }) => {
         </div>
         <div className='mb-8'>
           <div
-            className='bg-cyan-600 text-white p-2 flex items-center justify-between mb-2 cursor-pointer'
+            className='bg-cyan-600 text-white p-2 flex items-center justify-between mb-2 cursor-pointer capitalize'
             onClick={toggleProductsVisibility}
           >
             <h3 className='text-md font-medium'>Select Product</h3>
@@ -199,7 +199,7 @@ const PricingChart = ({ packages, suits }) => {
               {groupsOption.map(option => (
                 <label
                   key={option}
-                  className='flex items-center justify-between space-x-2 bg-pink-600 p-2 text-white'
+                  className='flex items-center justify-between space-x-2 bg-pink-600 p-2 text-white capitalize'
                 >
                   <input
                     type='checkbox'
@@ -221,18 +221,18 @@ const PricingChart = ({ packages, suits }) => {
       <div className='right-container lg:w-[80%] w-full p-4'>
         {/* Shared container for aligning upper and lower sections */}
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-          <div className='text-center text-2xl text-white p-3'></div>
+          <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
           {groups?.map((g, i) => (
             <div
               key={i}
-              className='text-center text-2xl bg-cyan-600 text-white p-3'
+              className='text-center text-2xl bg-cyan-600 text-white p-3 capitalize'
             >
               {g.group}
             </div>
           ))}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-          <div className='text-center text-2xl text-white p-3'></div>
+          <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-6'>Sales <br /> Person Page</div>
           {groups?.map((g, i) => (
             <div key={i} className='relative text-center'>
               <Image
