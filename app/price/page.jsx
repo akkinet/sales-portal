@@ -18,14 +18,13 @@ const Price = () => {
       category: products?.split(',') || '',
       group: groups?.split(',') || '',
     })
-    const queryString = urlSearchParams.toString()
-
+    const queryString = urlSearchParams.toString();
     let p_data = await fetch(`/api/packages?${queryString}`)
-    p_data = await p_data.json()
+    p_data = await p_data.json();
     let g_data = await fetch(`/api/suits?${queryString}`)
-    g_data = await g_data.json()
+    g_data = await g_data.json();
     let pack = await fetch(`/api/packages`)
-    pack = await pack.json()
+    pack = await pack.json();
     let features = pack
       .map(p => ({ packages: p.products, category: p.category }))
       .map(p => ({
@@ -160,7 +159,7 @@ const Price = () => {
           ))}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-        <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-6 '>Client's <br />Page</div>
+        <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Client's <br />Page</div>
 
           {groups?.map((g, i) => (
             <div key={i} className='relative text-center'>
