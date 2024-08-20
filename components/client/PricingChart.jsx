@@ -254,13 +254,13 @@ const PricingChart = ({ packages, suits }) => {
           {products?.map((p, inx) => (
             <React.Fragment key={JSON.stringify(p)}>
               <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
-                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3'>
+                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center'>
                   {p.category}
                 </div>
                 {sortByFeatureCount(p.products).map(pro => (
                   <div
                     key={JSON.stringify(pro.name)}
-                    className='text-center text-2xl bg-cyan-600 text-white p-3'
+                    className='flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center'
                   >
                     {pro.name}
                   </div>
@@ -286,7 +286,7 @@ const PricingChart = ({ packages, suits }) => {
                       {Object.values(pro.metadata).map(i => (
                         <div
                           key={i}
-                          className='flex justify-center items-center p-3 mb-1 border-b-2 '
+                          className='flex justify-center items-center p-3 py-4 mb-1 border-b-2 '
                         >
                           {i}
                         </div>
@@ -331,7 +331,7 @@ const PricingChart = ({ packages, suits }) => {
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4'>
-          <div className='text-center text-4xl bg-cyan-600 text-white p-3 h-[25vh] font-bold leading-snug'>
+          <div className='text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug'>
             <p>Expected</p>
             <p>Results</p>
           </div>
