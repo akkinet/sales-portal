@@ -110,7 +110,7 @@ const Price = () => {
                       {[...Array(3)].map((_, j) => (
                         <div
                           key={j}
-                          className='flex justify-center items-center p-3 mb-1 bg-gray-300 animate-pulse'
+                          className='flex justify-center items-center p-3 py-4 mb-1 bg-gray-300 animate-pulse'
                         ></div>
                       ))}
                     </div>
@@ -148,7 +148,7 @@ const Price = () => {
     <div className='flex justify-center items-center w-full h-full p-4'>
       <div className='right-container lg:w-[80%] w-full p-4 border-2 border-cyan-600 rounded-2xl bg-gray-200'>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-          <div className='text-center text-2xl text-white p-3 capitalize bg-cyan-600'></div>
+          <div className=' text-2xl text-white p-3 capitalize bg-cyan-600'></div>
           {groups?.map((g, i) => (
             <div
               key={i}
@@ -182,13 +182,13 @@ const Price = () => {
           {products?.map((p, inx) => (
             <React.Fragment key={JSON.stringify(p)}>
               <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
-                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3'>
+                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center'>
                   {p.category}
                 </div>
                 {sortByFeatureCount(p.products).map(pro => (
                   <div
                     key={JSON.stringify(pro.name)}
-                    className='text-center text-2xl bg-cyan-600 text-white p-3'
+                    className='flex items-center justify-center text-center text-2xl bg-cyan-600 text-white p-3'
                   >
                     {pro.name}
                   </div>
@@ -259,7 +259,7 @@ const Price = () => {
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4'>
-          <div className='text-center text-4xl bg-cyan-600 text-white p-3 h-[25vh] font-bold leading-snug'>
+          <div className='text-center text-4xl bg-cyan-600 text-white p-3 font-bold leading-snug'>
             <p>Expected</p>
             <p>Results</p>
           </div>
