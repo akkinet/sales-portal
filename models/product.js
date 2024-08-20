@@ -8,7 +8,8 @@ const productSchema = new mongoose.Schema({
     price: Number,
     group: String,
     product_id: String,
-    price_id: String
+    price_id: String,
+    metadata: mongoose.Schema.Types.Mixed
 })
 
 export default mongoose.models.Product || mongoose.model("Product", productSchema);

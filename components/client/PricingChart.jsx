@@ -215,7 +215,7 @@ const PricingChart = ({ packages, suits }) => {
         </div>
 
         <button onClick={copyUrlHandler} className='ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md'>Copy URL</button>
-      
+
       </div>
       {/* right container component  */}
       <div className='right-container lg:w-[80%] w-full p-4'>
@@ -266,6 +266,35 @@ const PricingChart = ({ packages, suits }) => {
                   </div>
                 ))}
               </div>
+              {'metadata' in p.products[0] &&
+                <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
+                  <div className='col-span-1 bg-gray-100 h-[97%]'>
+                    {Object.keys(p.products[0]?.metadata).map(i => (
+                      <div
+                        key={i}
+                        className='text-center font-semibold px-3 py-4 mb-1 border-b-2 capitalize'
+                      >
+                        {i}
+                      </div>
+                    ))}
+                  </div>
+                  {sortByFeatureCount(p.products).map(pro => (
+                    <div
+                      key={JSON.stringify(pro)}
+                      className='col-span-1 bg-gray-100 h-[97%]'
+                    >
+                      {Object.values(pro.metadata).map(i => (
+                        <div
+                          key={i}
+                          className='flex justify-center items-center p-3 mb-1 border-b-2 '
+                        >
+                          {i}
+                        </div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              }
               <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
                 <div className='col-span-1 bg-gray-100 h-[97%]'>
                   {selectedFeatures[inx]?.features.map(i => (

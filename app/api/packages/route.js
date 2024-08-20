@@ -18,6 +18,7 @@ export const GET = async (req) => {
               description: "$description",
               features: "$features",
               price: "$price",
+              metadata: "$metadata"
             },
           },
         },
@@ -28,6 +29,7 @@ export const GET = async (req) => {
           _id: 0,
           category: "$_id",
           products: 1,
+          metadata: 1
         },
       },
     ];
