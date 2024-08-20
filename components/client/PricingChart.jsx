@@ -33,10 +33,11 @@ const PricingChart = ({ packages, suits }) => {
   const [selectedFeatures, setSelectedFeatures] = useState(featuresOption)
 
   const toggleProduct = async product => {
-    const urlSearchParams = new URLSearchParams({
-      category: selectedProducts,
-      group: selectedGroups
-    })
+    const urlSearchParams = new URLSearchParams()
+    if (selectedProducts.length > 0)
+      urlSearchParams.set('category', selectedProducts)
+    if (selectedGroups.length > 0)
+      urlSearchParams.set('group', selectedGroups)
     let cat
     if (selectedProducts.includes(product)) {
       const inx = selectedProducts.indexOf(product)
@@ -50,8 +51,11 @@ const PricingChart = ({ packages, suits }) => {
     setSelectedProducts(cat)
     urlSearchParams.set('category', cat)
     const queryString = urlSearchParams.toString()
-    let p_data = await fetch(`/api/packages?${queryString}`)
-    p_data = await p_data.json()
+    let data = await fetch(`/api/stripe?${queryString}`)
+    data = await data.json()
+    const p_data = data.packages
+    const g_data = data.suits
+    setGroups(g_data.sort(sortByTotalPrice))
     let features = []
     if (cat.length > 0) {
       features = featuresOption.filter(f => cat.includes(f.category))
@@ -66,9 +70,6 @@ const PricingChart = ({ packages, suits }) => {
     })
     setSelectedFeatures(reorderedData)
     setProducts(p_data)
-    let g_data = await fetch(`/api/suits?${queryString}`)
-    g_data = await g_data.json()
-    setGroups(g_data.sort(sortByTotalPrice))
   }
 
   const toggleOption = async group => {

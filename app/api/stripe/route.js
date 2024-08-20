@@ -32,11 +32,11 @@ export const GET = async (req) => {
         }
 
 
-        let packageSuits = []
+        let packages = [], suits = [];
 
         for (let suit of data) {
             const category = suit.metadata["category"];
-            const prodCat = packageSuits.find(p => p.category == category);
+            const prodCat = packages.find(p => p.category == category);
             if (prodCat) {
                 const metadata = { ...suit.metadata };
                 delete metadata.category;
@@ -71,10 +71,26 @@ export const GET = async (req) => {
                     category: suit.metadata.category,
                     products
                 }
-                packageSuits.push(obj)
+                packages.push(obj)
+            }
+
+            const group = suit.metadata["group"];
+            const sGp = suits.find(s => s.group == group);
+            if (sGp) {
+                sGp.totalPrice += parseInt(suit.metadata.price);
+                sGp.prices.push(suit.default_price)
+                sGp.expectedOutput += ", " + suit.description;
+            } else {
+                const suitObj = {
+                    totalPrice: parseInt(suit.metadata.price),
+                    prices: [suit.default_price],
+                    group,
+                    expectedOutput: suit.description
+                }
+                suits.push(suitObj)
             }
         }
-        return NextResponse.json(packageSuits, { status: 200 });
+        return NextResponse.json({ packages, suits }, { status: 200 });
     } catch (error) {
         return new Response(JSON.stringify({ error: error.message }), { status: 500 });
     }
