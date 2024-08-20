@@ -34,8 +34,6 @@ const PricingChart = ({ packages, suits }) => {
 
   const toggleProduct = async product => {
     const urlSearchParams = new URLSearchParams()
-    if (selectedProducts.length > 0)
-      urlSearchParams.set('category', selectedProducts)
     if (selectedGroups.length > 0)
       urlSearchParams.set('group', selectedGroups)
     let cat
@@ -48,8 +46,9 @@ const PricingChart = ({ packages, suits }) => {
     } else {
       cat = selectedProducts.concat(product)
     }
+    if (cat.length > 0)
+      urlSearchParams.set('category', cat)
     setSelectedProducts(cat)
-    urlSearchParams.set('category', cat)
     const queryString = urlSearchParams.toString()
     let data = await fetch(`/api/stripe?${queryString}`)
     data = await data.json()
@@ -73,20 +72,19 @@ const PricingChart = ({ packages, suits }) => {
   }
 
   const toggleOption = async group => {
-    const urlSearchParams = new URLSearchParams({
-      category: selectedProducts,
-      group: selectedGroups
-    })
+    const urlSearchParams = new URLSearchParams()
+    if (selectedProducts.length > 0)
+      urlSearchParams.set('category', selectedProducts)
     let grp
     if (selectedGroups.includes(group)) {
       const inx = selectedGroups.indexOf(group)
       grp = [...selectedGroups.slice(0, inx), ...selectedGroups.slice(inx + 1)]
-      setSelectedGroups(grp)
     } else {
       grp = selectedGroups.concat(group)
-      setSelectedGroups(grp)
     }
-    urlSearchParams.set('group', grp)
+    setSelectedGroups(grp)
+    if (grp.length > 0)
+      urlSearchParams.set('group', grp)
     const queryString = urlSearchParams.toString()
     let p_data = await fetch(`/api/packages?${queryString}`)
     p_data = await p_data.json()

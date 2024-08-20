@@ -14,17 +14,20 @@ const Price = () => {
   const group = searchParams.get('group')
 
   const fetchApi = async (groups, products) => {
-    const urlSearchParams = new URLSearchParams({
-      category: products?.split(',') || '',
-      group: groups?.split(',') || '',
-    })
+    const urlSearchParams = new URLSearchParams()
+
+    if (products.length > 0)
+      urlSearchParams.set('category', products)
+    if (groups.length > 0)
+      urlSearchParams.set('group', groups)
     const queryString = urlSearchParams.toString();
-    let p_data = await fetch(`/api/packages?${queryString}`)
-    p_data = await p_data.json();
-    let g_data = await fetch(`/api/suits?${queryString}`)
-    g_data = await g_data.json();
-    let pack = await fetch(`/api/packages`)
-    pack = await pack.json();
+    let data = await fetch(`/api/stripe?${queryString}`)
+    data = await data.json();
+    const p_data = data.packages;
+    const g_data = data.suits;
+    let forPack = await fetch(`/api/stripe`)
+    forPack = await forPack.json();
+    const pack = forPack.packages;
     let features = pack
       .map(p => ({ packages: p.products, category: p.category }))
       .map(p => ({
@@ -159,7 +162,7 @@ const Price = () => {
           ))}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-        <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Client's <br />Page</div>
+          <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Client's <br />Page</div>
 
           {groups?.map((g, i) => (
             <div key={i} className='relative text-center'>
