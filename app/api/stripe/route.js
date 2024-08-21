@@ -5,28 +5,39 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export const GET = async (req) => {
   try {
     const { searchParams } = new URL(req.url);
-    const paramsArray = [...searchParams.entries()];
-    let count = 0,
-      size = paramsArray.length;
+    let count = 0;
     let query = "";
-    for (const [name, value] of paramsArray) {
-      const valArr = value.split(",");
-      for (const [key, val] of valArr.entries()) {
-        query += `metadata[\'${name}\']:\'${val}\'`;
-        if (key < valArr.length - 1) query += " OR ";
-      }
+    const category = searchParams.get("category")?.split(",") || [];
+    const group = searchParams.get("group")?.split(",") || [];
+    const catSize = category.length;
+    const grpSize = group.length;
+    for (const value of category) {
+      query += `metadata['category']:\'${value}\'`;
       count++;
-      if (count < size) query += " AND ";
+      if (count < catSize) query += " OR ";
     }
+    count = 0
 
     let data = [];
-    if (size != 0) {
+    if ((catSize > 0 && grpSize == 0) || (catSize == 0 && grpSize > 0)) {
+      for (const value of group) {
+        query += `metadata['group']:\'${value}\'`;
+        count++;
+        if (count < grpSize) query += " OR ";
+      }
       const res = await stripe.products.search({
         query,
       });
 
       data = res.data;
-    } else {
+    } else if (catSize > 0 && grpSize > 0) {
+      const res = await stripe.products.search({
+        query,
+      });
+
+      data = res.data.filter(d => group.includes(d.metadata["group"]));
+    }
+    else {
       const res = await stripe.products.search({
         query:
           "metadata['group']:'kickstarter' OR metadata['group']:'recommended' OR metadata['group']:'superfast'",
