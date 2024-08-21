@@ -132,7 +132,7 @@ const Price = () => {
           <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-1'>
             <div className='col-span-1 flex justify-center bg-gray-300 p-7 animate-pulse'></div>
             {[...Array(3)].map((_, i) => (
-              <div
+              <div 
                 key={i}
                 className='col-span-1 flex justify-center bg-gray-300 p-2 animate-pulse'
               >
@@ -226,7 +226,7 @@ const Price = () => {
               }
               <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
                 <div className='col-span-1 bg-gray-100 h-[97%]'>
-                  {selectedFeatures[inx]?.features.map(i => (
+                  {selectedFeatures[inx]?.features.map(i => ( 
                     <div
                       key={i}
                       className='text-center font-semibold p-3 py-4 mb-1 border-b-2 capitalize'
