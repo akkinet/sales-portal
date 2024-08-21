@@ -138,7 +138,7 @@ const LoginComponent = () => {
           )}
         </div>
         <div
-          className="flex-1 flex justify-center items-center relative hidden md:flex"
+          className="flex-1 lg:flex justify-center items-center relative hidden md:flex"
           style={{
             backgroundImage:
               "url(https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017958/Hexerve%20website%20assets/zgrhyym7m4lzazgpq0wk.jpg)",

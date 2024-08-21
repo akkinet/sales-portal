@@ -14,17 +14,20 @@ const Price = () => {
   const group = searchParams.get('group')
 
   const fetchApi = async (groups, products) => {
-    const urlSearchParams = new URLSearchParams({
-      category: products?.split(',') || '',
-      group: groups?.split(',') || '',
-    })
+    const urlSearchParams = new URLSearchParams()
+
+    if (products.length > 0)
+      urlSearchParams.set('category', products)
+    if (groups.length > 0)
+      urlSearchParams.set('group', groups)
     const queryString = urlSearchParams.toString();
-    let p_data = await fetch(`/api/packages?${queryString}`)
-    p_data = await p_data.json();
-    let g_data = await fetch(`/api/suits?${queryString}`)
-    g_data = await g_data.json();
-    let pack = await fetch(`/api/packages`)
-    pack = await pack.json();
+    let data = await fetch(`/api/stripe?${queryString}`)
+    data = await data.json();
+    const p_data = data.packages;
+    const g_data = data.suits;
+    let forPack = await fetch(`/api/stripe`)
+    forPack = await forPack.json();
+    const pack = forPack.packages;
     let features = pack
       .map(p => ({ packages: p.products, category: p.category }))
       .map(p => ({
@@ -188,7 +191,7 @@ const Price = () => {
                 {sortByFeatureCount(p.products).map(pro => (
                   <div
                     key={JSON.stringify(pro.name)}
-                    className='flex items-center justify-center text-center text-2xl bg-cyan-600 text-white p-3'
+                    className='flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center'
                   >
                     {pro.name}
                   </div>
@@ -196,25 +199,26 @@ const Price = () => {
               </div>
               {'metadata' in p.products[0] &&
                 <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-                  <div className='col-span-1 bg-gray-100 h-full'>
+                  <div className=' col-span-1 bg-gray-100 h-full'>
                     {Object.keys(p.products[0]?.metadata).map(i => (
                       <div
                         key={i}
-                        className='text-center text-lg font-semibold px-3 py-3 mb-1 border-b-2 border-gray-200 capitalize'
+                        className='text-center text-lg font-semibold px-3 py-3 mb-1  border-b-2 border-gray-300  capitalize'
                       >
                         {i}
                       </div>
+                      
                     ))}
                   </div>
                   {sortByFeatureCount(p.products).map(pro => (
                     <div
                       key={JSON.stringify(pro)}
-                      className='text-sm col-span-1 bg-gray-100 h-full'
+                      className='text-sm  col-span-1 bg-gray-100 h-full'
                     >
                       {Object.values(pro.metadata).map(i => (
                         <div
                           key={i}
-                          className='flex justify-center items-center p-3 py-4 mb-1 border-b-2  border-gray-300'
+                          className='flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300 '
                         >
                           {i}
                         </div>
@@ -223,7 +227,7 @@ const Price = () => {
                   ))}
                 </div>
               }
-              <div className='grid grid-cols-1 md:grid-cols-4 gap-1 border-t'>
+              <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
                 <div className='col-span-1 bg-gray-100 h-[98%]'>
                   {selectedFeatures[inx]?.features.map(i => (
                     <div

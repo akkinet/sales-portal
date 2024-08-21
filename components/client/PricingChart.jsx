@@ -2,6 +2,7 @@
 import React, { useState, useMemo } from 'react'
 import { FaArrowDown, FaArrowUp } from 'react-icons/fa6'
 import Image from 'next/image'
+import { toast, Toaster } from 'react-hot-toast'
 import {
   sortByTotalPrice,
   sortByFeatureCount
@@ -33,10 +34,9 @@ const PricingChart = ({ packages, suits }) => {
   const [selectedFeatures, setSelectedFeatures] = useState(featuresOption)
 
   const toggleProduct = async product => {
-    const urlSearchParams = new URLSearchParams({
-      category: selectedProducts,
-      group: selectedGroups
-    })
+    const urlSearchParams = new URLSearchParams()
+    if (selectedGroups.length > 0)
+      urlSearchParams.set('group', selectedGroups)
     let cat
     if (selectedProducts.includes(product)) {
       const inx = selectedProducts.indexOf(product)
@@ -47,11 +47,15 @@ const PricingChart = ({ packages, suits }) => {
     } else {
       cat = selectedProducts.concat(product)
     }
+    if (cat.length > 0)
+      urlSearchParams.set('category', cat)
     setSelectedProducts(cat)
-    urlSearchParams.set('category', cat)
     const queryString = urlSearchParams.toString()
-    let p_data = await fetch(`/api/packages?${queryString}`)
-    p_data = await p_data.json()
+    let data = await fetch(`/api/stripe?${queryString}`)
+    data = await data.json()
+    const p_data = data.packages
+    const g_data = data.suits
+    setGroups(g_data.sort(sortByTotalPrice))
     let features = []
     if (cat.length > 0) {
       features = featuresOption.filter(f => cat.includes(f.category))
@@ -66,26 +70,22 @@ const PricingChart = ({ packages, suits }) => {
     })
     setSelectedFeatures(reorderedData)
     setProducts(p_data)
-    let g_data = await fetch(`/api/suits?${queryString}`)
-    g_data = await g_data.json()
-    setGroups(g_data.sort(sortByTotalPrice))
   }
 
   const toggleOption = async group => {
-    const urlSearchParams = new URLSearchParams({
-      category: selectedProducts,
-      group: selectedGroups
-    })
+    const urlSearchParams = new URLSearchParams()
+    if (selectedProducts.length > 0)
+      urlSearchParams.set('category', selectedProducts)
     let grp
     if (selectedGroups.includes(group)) {
       const inx = selectedGroups.indexOf(group)
       grp = [...selectedGroups.slice(0, inx), ...selectedGroups.slice(inx + 1)]
-      setSelectedGroups(grp)
     } else {
       grp = selectedGroups.concat(group)
-      setSelectedGroups(grp)
     }
-    urlSearchParams.set('group', grp)
+    setSelectedGroups(grp)
+    if (grp.length > 0)
+      urlSearchParams.set('group', grp)
     const queryString = urlSearchParams.toString()
     let p_data = await fetch(`/api/packages?${queryString}`)
     p_data = await p_data.json()
@@ -114,10 +114,18 @@ const PricingChart = ({ packages, suits }) => {
   const copyUrlHandler = () => {
     const urlSearchParams = new URLSearchParams({
       category: selectedProducts,
-      group: selectedGroups
-    })
-    const queryString = urlSearchParams.toString()
+      group: selectedGroups,
+    });
+
+    const queryString = urlSearchParams.toString();
+
     navigator.clipboard.writeText(`${window.location.origin}/price?${queryString}`)
+      .then(() => {
+        toast.success('URL copied Successfully');
+      })
+      .catch(() => {
+        toast.error('Failed to copy URL.');
+      });
   }
 
   const clearFilter = async () => {
@@ -140,6 +148,7 @@ const PricingChart = ({ packages, suits }) => {
 
   return (
     <div className='flex flex-col lg:flex-row bg-gray-300'>
+      <Toaster position="top-center" reverseOrder={false} />
       {/* left container component */}
       <div className='lg:w-[20%] p-4 bg-gray-200'>
         <div className='flex flex-row justify-between'>
@@ -276,7 +285,6 @@ const PricingChart = ({ packages, suits }) => {
                       >
                         {i}
                       </div>
-                      
                     ))}
                   </div>
                   {sortByFeatureCount(p.products).map(pro => (
