@@ -232,7 +232,7 @@ const PricingChart = ({ packages, suits }) => {
           ))}
         </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-          <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Person Page</div>
+          <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Portal</div>
           {groups?.map((g, i) => (
             <div key={i} className='relative text-center'>
               <Image
@@ -276,6 +276,7 @@ const PricingChart = ({ packages, suits }) => {
                       >
                         {i}
                       </div>
+                      
                     ))}
                   </div>
                   {sortByFeatureCount(p.products).map(pro => (
