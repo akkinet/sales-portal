@@ -147,7 +147,7 @@ const PricingChart = ({ packages, suits }) => {
   }
 
   return (
-    <div className='flex flex-col lg:flex-row bg-gray-300'>
+    <div className='flex flex-col lg:flex-row bg-gray-300 '>
       <Toaster position="top-center" reverseOrder={false} />
       {/* left container component */}
       <div className='lg:w-[20%] p-4 bg-gray-200'>
@@ -227,9 +227,9 @@ const PricingChart = ({ packages, suits }) => {
 
       </div>
       {/* right container component  */}
-      <div className='right-container lg:w-[80%] w-full p-4'>
-        {/* Shared container for aligning upper and lower sections */}
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
+      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center border-2 border-red-500'>
+          <div className='border-2 border-red-500'>
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
           <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
           {groups?.map((g, i) => (
             <div
@@ -370,6 +370,7 @@ const PricingChart = ({ packages, suits }) => {
             </div>
           ))}
         </div>
+          </div>
       </div>
     </div>
   )
