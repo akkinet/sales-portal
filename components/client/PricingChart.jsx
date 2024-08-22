@@ -228,7 +228,6 @@ const PricingChart = ({ packages, suits }) => {
             Copy URL
           </button>
           <button
-            onClick={copyUrlHandler}
             className="ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md"
           >
             Log Out
