@@ -17,19 +17,10 @@ export const authOptions = {
         },
       },
       async authorize(credentials, req) {
-        // const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, {
-        //   method: "POST",
-        //   body: JSON.stringify(credentials),
-        //   headers: { "Content-Type": "application/json" },
-        // });
-        // const user = await res.json();
-        // if (res.ok && user) {
-        //   return user;
-        // }
         if (credentials.username == "demo" && credentials.password == "demo") {
           return {
             email: "demo@hex.com",
-            username: "demo",
+            name: "demo",
           };
         }
         return null;
@@ -46,9 +37,9 @@ export const authOptions = {
     async jwt({ token, account }) {
       return token;
     },
-    async session({ session }) {
-      return session;
-    },
+    // async session({ session, token }) {
+    //   return session;
+    // },
   },
   secret: process.env.NEXTAUTH_SECRET,
 };
