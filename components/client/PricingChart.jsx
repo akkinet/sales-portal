@@ -228,7 +228,7 @@ const PricingChart = ({ packages, suits }) => {
       </div>
       {/* right container component  */}
       <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center border-2 border-red-500'>
-          <div className='border-2 border-red-500'>
+          <div className=' inner-right border-2 border-red-500'>
           <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
           <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
           {groups?.map((g, i) => (
