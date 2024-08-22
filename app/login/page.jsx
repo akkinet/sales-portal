@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react"
+import { signIn } from 'next-auth/react'
 
 const useResponsiveBackground = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false)
@@ -30,11 +31,14 @@ const LoginComponent = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
     // Add login logic here
-    console.log("Email:", email)
-    console.log("Password:", password)
+    await signIn("credentials", {
+      // redirect: false,
+      username : "demo",
+      password : "demo",
+    });
   }
 
   return (
@@ -138,7 +142,7 @@ const LoginComponent = () => {
           )}
         </div>
         <div
-          className="flex-1 flex justify-center items-center relative hidden md:flex"
+          className="flex-1 lg:flex justify-center items-center relative hidden md:flex"
           style={{
             backgroundImage:
               "url(https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017958/Hexerve%20website%20assets/zgrhyym7m4lzazgpq0wk.jpg)",

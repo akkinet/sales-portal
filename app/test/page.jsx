@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);   
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 
 function CheckoutForm() {
@@ -16,8 +16,8 @@ function CheckoutForm() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount:   
- 1000, // Amount in cents
+        amount:
+          1000, // Amount in cents
         currency: 'usd',
       }),
     });
