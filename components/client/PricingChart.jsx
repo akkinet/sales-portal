@@ -147,7 +147,7 @@ const PricingChart = ({ packages, suits }) => {
   }
 
   return (
-    <div className='flex flex-col lg:flex-row bg-gray-300 '>
+    <div className='flex flex-col lg:flex-row bg-gray-300'>
       <Toaster position="top-center" reverseOrder={false} />
       {/* left container component */}
       <div className='lg:w-[20%] p-4 bg-gray-200'>
@@ -227,61 +227,89 @@ const PricingChart = ({ packages, suits }) => {
 
       </div>
       {/* right container component  */}
-      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center border-2 border-red-500'>
-          <div className=' inner-right border-2 border-red-500'>
+      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center border-2 border-red-500 min-h-screen'>
+        <div className='inner-right border-2 border-red-500 w-full max-w-[1200px]'>
           <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-          <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
-          {groups?.map((g, i) => (
-            <div
-              key={i}
-              className='text-center text-2xl bg-cyan-600 text-white p-3 capitalize'
-            >
-              {g.group}
-            </div>
-          ))}
-        </div>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-          <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Portal</div>
-          {groups?.map((g, i) => (
-            <div key={i} className='relative text-center'>
-              <Image
-                src='https://res.cloudinary.com/dduiqwdtr/image/upload/v1723184590/Hexerve%20website%20assets/trianglePink.png'
-                alt='Triangle Pink'
-                width={350}
-                height={100}
-                priority
-                className='w-full'
-              />
-              <div className='absolute  inset-0 flex flex-col justify-center items-center text-white lg:text-md text-xl'>
-                <span>$ {g.totalPrice} Per Month </span>
+            <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
+            {groups?.map((g, i) => (
+              <div
+                key={i}
+                className='text-center text-2xl bg-cyan-600 text-white p-3 capitalize'
+              >
+                {g.group}
               </div>
-            </div>
-          ))}
-        </div>
-
-        <div className='overflow-x-auto'>
-          {products?.map((p, inx) => (
-            <React.Fragment key={JSON.stringify(p)}>
-              <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
-                <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center'>
-                  {p.category}
+            ))}
+          </div>
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
+            <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Portal</div>
+            {groups?.map((g, i) => (
+              <div key={i} className='relative text-center'>
+                <Image
+                  src='https://res.cloudinary.com/dduiqwdtr/image/upload/v1723184590/Hexerve%20website%20assets/trianglePink.png'
+                  alt='Triangle Pink'
+                  width={350}
+                  height={100}
+                  priority
+                  className='w-full'
+                />
+                <div className='absolute inset-0 flex flex-col justify-center items-center text-white lg:text-md text-xl'>
+                  <span>$ {g.totalPrice} Per Month </span>
                 </div>
-                {sortByFeatureCount(p.products).map(pro => (
-                  <div
-                    key={JSON.stringify(pro.name)}
-                    className='flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center'
-                  >
-                    {pro.name}
-                  </div>
-                ))}
               </div>
-              {'metadata' in p.products[0] &&
+            ))}
+          </div>
+
+          <div className='overflow-x-auto'>
+            {products?.map((p, inx) => (
+              <React.Fragment key={JSON.stringify(p)}>
+                <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4'>
+                  <div className='col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center'>
+                    {p.category}
+                  </div>
+                  {sortByFeatureCount(p.products).map(pro => (
+                    <div
+                      key={JSON.stringify(pro.name)}
+                      className='flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center'
+                    >
+                      {pro.name}
+                    </div>
+                  ))}
+                </div>
+                {'metadata' in p.products[0] &&
+                  <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
+                    <div className='col-span-1 bg-gray-100 h-full'>
+                      {Object.keys(p.products[0]?.metadata).map(i => (
+                        <div
+                          key={i}
+                          className='text-center text-lg font-semibold px-3 py-3 mb-1 border-b-2 border-gray-300 capitalize'
+                        >
+                          {i}
+                        </div>
+                      ))}
+                    </div>
+                    {sortByFeatureCount(p.products).map(pro => (
+                      <div
+                        key={JSON.stringify(pro)}
+                        className='text-sm col-span-1 bg-gray-100 h-full'
+                      >
+                        {Object.values(pro.metadata).map(i => (
+                          <div
+                            key={i}
+                            className='flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300'
+                          >
+                            {i}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                }
                 <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-                  <div className=' col-span-1 bg-gray-100 h-full'>
-                    {Object.keys(p.products[0]?.metadata).map(i => (
+                  <div className='col-span-1 bg-gray-100 h-[98%]'>
+                    {selectedFeatures[inx]?.features.map(i => (
                       <div
                         key={i}
-                        className='text-center text-lg font-semibold px-3 py-3 mb-1  border-b-2 border-gray-300  capitalize'
+                        className='text-center font-semibold px-3 py-4 mb-1 border-b-2 border-gray-300 capitalize'
                       >
                         {i}
                       </div>
@@ -290,87 +318,59 @@ const PricingChart = ({ packages, suits }) => {
                   {sortByFeatureCount(p.products).map(pro => (
                     <div
                       key={JSON.stringify(pro)}
-                      className='text-sm  col-span-1 bg-gray-100 h-full'
+                      className='text-sm col-span-1 bg-gray-100 h-[98%]'
                     >
-                      {Object.values(pro.metadata).map(i => (
+                      {selectedFeatures[inx]?.features.map(i => (
                         <div
                           key={i}
-                          className='flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300 '
+                          className='flex justify-center items-center p-3 mb-1 border-b-2 border-gray-300'
                         >
-                          {i}
+                          {pro.features.includes(i) ? (
+                            <div className='text-green-500 text-2xl'>✔️</div>
+                          ) : (
+                            <div className='text-red-500 text-2xl'>❌</div>
+                          )}
                         </div>
                       ))}
                     </div>
                   ))}
                 </div>
-              }
-              <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
-                <div className='col-span-1 bg-gray-100 h-[98%]'>
-                  {selectedFeatures[inx]?.features.map(i => (
-                    <div
-                      key={i}
-                      className='text-center font-semibold px-3 py-4 mb-1 border-b-2 border-gray-300 capitalize'
-                    >
-                      {i}
-                    </div>
-                  ))}
-                </div>
-                {sortByFeatureCount(p.products).map(pro => (
-                  <div
-                    key={JSON.stringify(pro)}
-                    className='text-sm col-span-1 bg-gray-100 h-[98%]'
-                  >
-                    {selectedFeatures[inx]?.features.map(i => (
-                      <div
-                        key={i}
-                        className='flex justify-center items-center p-3 mb-1 border-b-2 border-gray-300'
-                      >
-                        {pro.features.includes(i) ? (
-                          <div className='text-green-500 text-2xl'>✔️</div>
-                        ) : (
-                          <div className='text-red-500 text-2xl'>❌</div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </React.Fragment>
-          ))}
-        </div>
-
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4'>
-          <div className='text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug'>
-            <p>Expected</p>
-            <p>Results</p>
+              </React.Fragment>
+            ))}
           </div>
-          {groups?.map(g => (
-            <div
-              key={g.group}
-              className='text-center text-lg bg-cyan-600 text-white p-3'
-            >
-              <p className='mb-4'>{g.expectedOutput}</p>
-            </div>
-          ))}
-        </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-1'>
-          <div className='col-span-1 flex justify-center bg-cyan-600 p-7'></div>
-          {groups?.map(g => (
-            <div
-              key={g.group}
-              className='col-span-1 flex justify-center bg-cyan-600 p-2'
-            >
-              <button
-                onClick={() => checkOutHandler(g.prices)}
-                className='bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700'
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-4'>
+            <div className='text-center text-4xl bg-cyan-600 text-white p-3 font-bold leading-snug'>
+              <p>Expected</p>
+              <p>Results</p>
+            </div>
+            {groups?.map(g => (
+              <div
+                key={g.group}
+                className='text-center text-lg bg-cyan-600 text-white p-3'
               >
-                Buy Now
-              </button>
-            </div>
-          ))}
-        </div>
+                <p className='mb-4'>{g.expectedOutput}</p>
+              </div>
+            ))}
           </div>
+
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-1 mt-1'>
+            <div className='col-span-1 flex justify-center bg-cyan-600 p-7'></div>
+            {groups?.map(g => (
+              <div
+                key={g.group}
+                className='col-span-1 flex justify-center bg-cyan-600 p-2'
+              >
+                <button
+                  onClick={() => checkOutHandler(g.prices)}
+                  className='bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700'
+                >
+                  Buy Now
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
