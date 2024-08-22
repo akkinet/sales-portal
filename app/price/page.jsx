@@ -10,16 +10,14 @@ const Price = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedFeatures, setSelectedFeatures] = useState([])
   const searchParams = useSearchParams()
-  const category = searchParams.get('category')
-  const group = searchParams.get('group')
-
-  const fetchApi = async (groups, products) => {
+  const category = searchParams.get('category')?.split(',')
+  const group = searchParams.get('group')?.split(',')
+  const fetchApi = async () => {
     const urlSearchParams = new URLSearchParams()
-
-    if (products.length > 0)
-      urlSearchParams.set('category', products)
-    if (groups.length > 0)
-      urlSearchParams.set('group', groups)
+    if (category && category.length > 0)
+      urlSearchParams.set('category', category)
+    if (group && group.length > 0)
+      urlSearchParams.set('group', group)
     const queryString = urlSearchParams.toString();
     let data = await fetch(`/api/stripe?${queryString}`)
     data = await data.json();
@@ -49,7 +47,7 @@ const Price = () => {
 
   useEffect(() => {
     setIsLoading(true)
-    fetchApi(group, category)
+    fetchApi()
   }, [])
 
   const checkOutHandler = async prices => {
