@@ -1,5 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react"
+import { signIn } from 'next-auth/react'
+import { useRouter } from "next/navigation"
 
 const useResponsiveBackground = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false)
@@ -27,15 +29,22 @@ const useResponsiveBackground = () => {
 
 const LoginComponent = () => {
   const isSmallScreen = useResponsiveBackground()
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+  const router = useRouter()
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
-    // Add login logic here
-    console.log("Email:", email)
-    console.log("Password:", password)
+    const result = await signIn("credentials", {
+      redirect: false,
+      username,
+      password,
+    });
+    if(!result?.error){
+       router.push('/')
+    }
   }
+
 
   return (
     <div
@@ -50,9 +59,8 @@ const LoginComponent = () => {
     >
       <div className="flex flex-col md:flex-row h-full w-full md:h-3/4 md:w-3/4 shadow-lg bg-white rounded-lg overflow-hidden">
         <div
-          className={`flex-1 flex flex-col justify-center items-center p-6 md:p-12 relative ${
-            isSmallScreen ? "bg-cover bg-center text-white" : ""
-          }`}
+          className={`flex-1 flex flex-col justify-center items-center p-6 md:p-12 relative ${isSmallScreen ? "bg-cover bg-center text-white" : ""
+            }`}
           style={{
             backgroundImage: isSmallScreen
               ? "url(https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017958/Hexerve%20website%20assets/zgrhyym7m4lzazgpq0wk.jpg)"
@@ -60,9 +68,8 @@ const LoginComponent = () => {
           }}
         >
           <h2
-            className={`text-3xl md:text-4xl font-bold mb-4 md:mb-6 ${
-              isSmallScreen ? "text-white" : "text-cyan-600"
-            }`}
+            className={`text-3xl md:text-4xl font-bold mb-4 md:mb-6 ${isSmallScreen ? "text-white" : "text-cyan-600"
+              }`}
           >
             Log in
           </h2>
@@ -71,26 +78,23 @@ const LoginComponent = () => {
             className="w-full max-w-xs md:max-w-md relative"
           >
             <label
-              htmlFor="email"
-              className={`block mb-2 font-bold ${
-                isSmallScreen ? "text-white" : "text-cyan-600"
-              }`}
+              htmlFor="username"
+              className={`block mb-2 font-bold ${isSmallScreen ? "text-white" : "text-cyan-600"
+                }`}
             >
-              Email
+              username
             </label>
             <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="Enter your Email"
+              id="username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              placeholder="Enter your username"
               className="w-full p-2 md:p-3 mb-4 md:mb-6 border border-cyan-600 rounded text-black"
             />
             <label
               htmlFor="password"
-              className={`block mb-2 font-bold ${
-                isSmallScreen ? "text-white" : "text-cyan-600"
-              }`}
+              className={`block mb-2 font-bold ${isSmallScreen ? "text-white" : "text-cyan-600"
+                }`}
             >
               Password
             </label>
@@ -103,26 +107,23 @@ const LoginComponent = () => {
               className="w-full p-2 md:p-3 mb-4 md:mb-6 border border-cyan-600 rounded text-black"
             />
             <div
-              className={`flex items-center mb-4 md:mb-6 font-bold ${
-                isSmallScreen ? "text-white" : "text-cyan-600"
-              }`}
+              className={`flex items-center mb-4 md:mb-6 font-bold ${isSmallScreen ? "text-white" : "text-cyan-600"
+                }`}
             >
               <input type="checkbox" id="remember" className="mr-2" />
               <label htmlFor="remember">Remember me?</label>
             </div>
             <button
               type="submit"
-              className={`w-full p-2 md:p-3 mb-4 md:mb-6 border border-cyan-600 bg-white rounded font-bold ${
-                isSmallScreen ? "text-black" : "text-cyan-600"
-              }`}
+              className={`w-full p-2 md:p-3 mb-4 md:mb-6 border border-cyan-600 bg-white rounded font-bold ${isSmallScreen ? "text-black" : "text-cyan-600"
+                }`}
             >
               Log in
             </button>
             <a
               href="#"
-              className={`block mt-2 md:mt-4 text-center ${
-                isSmallScreen ? "text-white" : "text-pink-500"
-              }`}
+              className={`block mt-2 md:mt-4 text-center ${isSmallScreen ? "text-white" : "text-pink-500"
+                }`}
             >
               Forgot Password?
             </a>
@@ -138,7 +139,7 @@ const LoginComponent = () => {
           )}
         </div>
         <div
-          className="flex-1 flex justify-center items-center relative hidden md:flex"
+          className="flex-1 lg:flex justify-center items-center relative hidden md:flex"
           style={{
             backgroundImage:
               "url(https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017958/Hexerve%20website%20assets/zgrhyym7m4lzazgpq0wk.jpg)",
