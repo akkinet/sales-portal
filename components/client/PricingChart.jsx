@@ -227,23 +227,28 @@ const PricingChart = ({ packages, suits }) => {
           >
             Copy URL
           </button>
+          <button
+            className="ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md"
+          >
+            Log Out
+          </button>
         </div>
         {/* right container component  */}
-      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center border-2 border-red-500'>
-        <div className=' inner-right border-2 border-red-500'>
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-1'>
+      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center '>
+        <div className=' inner-right  '>
+          <div className='grid grid-cols-1 md:grid-cols-4 gap-1 '>
             <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
             {groups?.map((g, i) => (
               <div
                 key={i}
-                className="text-center text-2xl bg-cyan-600 text-white p-3 capitalize"
+                className="text-center text-2xl bg-cyan-600 text-white p-3 capitalize "
               >
                 {g.group}
               </div>
             ))}
           </div>
         <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-      <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Portal</div>
+      <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Sales <br /> Portal</div>
       {groups?.map((g, i) => (
         <div key={i} className="relative text-center">
           <Image
@@ -264,26 +269,26 @@ const PricingChart = ({ packages, suits }) => {
     <div className="overflow-x-auto">
       {products?.map((p, inx) => (
         <React.Fragment key={JSON.stringify(p)}>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4">
-            <div className="col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4 ">
+            <div className="col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center ">
               {p.category}
             </div>
             {sortByFeatureCount(p.products).map((pro) => (
               <div
                 key={JSON.stringify(pro.name)}
-                className="flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center"
+                className="flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center "
               >
                 {pro.name}
               </div>
             ))}
           </div>
           {"metadata" in p.products[0] && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-1">
-              <div className=" col-span-1 bg-gray-100 h-full">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-1" >
+              <div className=" col-span-1 bg-gray-100 h-full ">
                 {Object.keys(p.products[0]?.metadata).map((i) => (
                   <div
                     key={i}
-                    className="text-center text-lg font-semibold px-3 py-3 mb-1  border-b-2 border-gray-300  capitalize"
+                    className="text-center text-lg font-semibold px-3 py-3 mb-1  border-b-2 border-gray-300  capitalize "
                   >
                     {i}
                   </div>
@@ -292,7 +297,7 @@ const PricingChart = ({ packages, suits }) => {
               {sortByFeatureCount(p.products).map((pro) => (
                 <div
                   key={JSON.stringify(pro)}
-                  className="text-sm  col-span-1 bg-gray-100 h-full"
+                  className="text-sm  col-span-1 bg-gray-100 h-full "
                 >
                   {Object.values(pro.metadata).map((i) => (
                     <div
@@ -306,8 +311,8 @@ const PricingChart = ({ packages, suits }) => {
               ))}
             </div>
           )}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-1">
-            <div className="col-span-1 bg-gray-100 h-[98%]">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-1 ">
+            <div className="col-span-1 bg-gray-100 h-[98%] ">
               {selectedFeatures[inx]?.features.map((i) => (
                 <div
                   key={i}
@@ -342,14 +347,14 @@ const PricingChart = ({ packages, suits }) => {
     </div>
  
     <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4">
-      <div className="text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug">
+      <div className="text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug ">
         <p>Expected</p>
         <p>Results</p>
       </div>
       {groups?.map((g) => (
         <div
           key={g.group}
-          className="text-center text-lg bg-cyan-600 text-white p-3"
+          className="text-center text-lg bg-cyan-600 text-white p-3 "
         >
           <p className="mb-4">{g.expectedOutput}</p>
         </div>
@@ -357,7 +362,7 @@ const PricingChart = ({ packages, suits }) => {
     </div>
  
     <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-1">
-      <div className="col-span-1 flex justify-center bg-cyan-600 p-7"></div>
+      <div className="col-span-1 flex justify-center bg-cyan-600 p-7 "></div>
       {groups?.map((g) => (
         <div
           key={g.group}

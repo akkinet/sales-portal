@@ -16,6 +16,7 @@ const Modified = ({ packages, suits }) => {
   const [showProducts, setShowProducts] = useState(true);
   const [showOptions, setShowOptions] = useState(true);
 
+   
   const packagesOption = useMemo(() => packages.map((p) => p.category), []);
 
   const groupsOption = useMemo(() => groups.map((p) => p.group), []);
@@ -145,10 +146,10 @@ const Modified = ({ packages, suits }) => {
   };
 
   return (
-    <div className='flex flex-col lg:flex-row bg-gray-300 min-h-screen items-center justify-center'>
+    <div className='flex flex-col lg:flex-row bg-gray-300 min-h-screen'>
         <Toaster position="top-center" reverseOrder={false} />
         {/* left container component */}
-        <div className="lg:w-[20%] p-4 bg-gray-200 flex flex-col justify-center">
+        <div className="lg:w-[20%] p-4 bg-gray-200 flex flex-col ">
           <div className="flex flex-row justify-between">
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-cyan-600">
@@ -230,8 +231,9 @@ const Modified = ({ packages, suits }) => {
         </div>
         {/* right container component  */}
       <div className='right-container lg:w-[80%] w-full p-4 flex flex-col items-center justify-center'>
-        <div className='inner-right w-full max-w-7xl border-2 border-red-500 flex flex-col items-center'>
+        <div className='inner-right w-full max-w-8xl border-2 border-red-500 flex flex-col items-center'>
           <div className='w-full flex justify-center'>
+          <div className="text-center text-2xl bg-cyan-600 text-white p-3 capitalize flex-1"></div>
             {groups?.map((g, i) => (
               <div
                 key={i}
@@ -242,7 +244,7 @@ const Modified = ({ packages, suits }) => {
             ))}
           </div>
           <div className='w-full flex justify-center pb-4'>
-            <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4'>Sales <br /> Portal</div>
+            <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 flex-1'>Sales <br /> Portal</div>
             {groups?.map((g, i) => (
               <div key={i} className="relative text-center flex-1">
                 <Image
@@ -264,13 +266,13 @@ const Modified = ({ packages, suits }) => {
             {products?.map((p, inx) => (
               <React.Fragment key={JSON.stringify(p)}>
                 <div className="w-full flex justify-center mt-4 pb-4">
-                  <div className="text-center text-2xl bg-cyan-600 text-white p-3 flex-1">
+                  <div className="text-center text-2xl bg-cyan-600 text-white p-3 flex-1 ml-1">
                     {p.category}
                   </div>
                   {sortByFeatureCount(p.products).map((pro) => (
                     <div
                       key={JSON.stringify(pro.name)}
-                      className="text-center text-2xl bg-cyan-600 text-white p-3 flex-1"
+                      className="text-center text-2xl bg-cyan-600 text-white p-3 flex-1 ml-1"
                     >
                       {pro.name}
                     </div>
@@ -278,11 +280,11 @@ const Modified = ({ packages, suits }) => {
                 </div>
                 {"metadata" in p.products[0] && (
                   <div className="w-full flex">
-                    <div className="bg-gray-100 h-full flex-1">
+                    <div className="bg-gray-100 h-full flex-1 ml-1">
                       {Object.keys(p.products[0]?.metadata).map((i) => (
                         <div
                           key={i}
-                          className="text-center text-lg font-semibold px-3 py-3 mb-1 border-b-2 border-gray-300 capitalize"
+                          className="text-center text-lg font-semibold px-3 py-3 mb-1 border-b-2 border-gray-300 capitalize "
                         >
                           {i}
                         </div>
@@ -291,12 +293,12 @@ const Modified = ({ packages, suits }) => {
                     {sortByFeatureCount(p.products).map((pro) => (
                       <div
                         key={JSON.stringify(pro)}
-                        className="text-sm bg-gray-100 h-full flex-1"
+                        className="text-sm bg-gray-100 h-full flex-1 ml-1 "
                       >
                         {Object.values(pro.metadata).map((i) => (
                           <div
                             key={i}
-                            className="flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300"
+                            className="flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300 "
                           >
                             {i}
                           </div>
@@ -306,11 +308,11 @@ const Modified = ({ packages, suits }) => {
                   </div>
                 )}
                 <div className="w-full flex justify-center">
-                  <div className="bg-gray-100 h-[98%] flex-1">
+                  <div className="bg-gray-100 h-[98%] flex-1 ml-1">
                     {selectedFeatures[inx]?.features.map((i) => (
                       <div
                         key={i}
-                        className="text-center font-semibold px-3 py-4 mb-1 border-b-2 border-gray-300 capitalize"
+                        className="text-center font-semibold px-3 py-4 mb-1 border-b-2 border-gray-300 capitalize "
                       >
                         {i}
                       </div>
@@ -319,7 +321,7 @@ const Modified = ({ packages, suits }) => {
                   {sortByFeatureCount(p.products).map((pro) => (
                     <div
                       key={JSON.stringify(pro)}
-                      className="text-sm bg-gray-100 h-[98%] flex-1"
+                      className="text-sm bg-gray-100 h-[98%] flex-1 ml-1"
                     >
                       {selectedFeatures[inx]?.features.map((i) => (
                         <div
