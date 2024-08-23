@@ -1,14 +1,10 @@
 import { headers } from 'next/headers';
 import PricingChart from '../client/PricingChart';
+import Modified from '../client/Modified';
 
 const fetchApi = async () => {
     const head = headers()
     const hostname = head.get('x-hostname')
-    // let packages = await fetch(`${hostname}/api/packages`)
-    // packages = await packages.json()
-    // let suits = await fetch(`${hostname}/api/suits`)
-    // suits = await suits.json()
-    // return [packages, suits]
     const res = await fetch(`${hostname}/api/stripe`)
     const data = await res.json()
     return data
@@ -18,7 +14,8 @@ const Dashboard = async () => {
     const { packages, suits } = await fetchApi()
 
     return (
-        <PricingChart packages={packages} suits={suits} />
+        // <PricingChart packages={packages} suits={suits} />
+        <Modified packages={packages} suits={suits} />
     )
 }
 
