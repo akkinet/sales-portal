@@ -52,33 +52,23 @@ export const GET = async (req) => {
     for (let suit of data) {
       const category = suit.metadata["category"];
       const prodCat = packages.find((p) => p.category == category);
+      const prodObj = {
+        id: suit.id,
+        name: suit.name,
+        description: suit.description,
+        features: suit.marketing_features.map((f) => f.name),
+        price: parseInt(suit.metadata.price),
+      };
+      const metadata = { ...suit.metadata };
+      delete metadata.category;
+      delete metadata.price;
+      delete metadata.group;
+      if (Object.keys(metadata).length > 0) prodObj.metadata = metadata;
       if (prodCat) {
-        const metadata = { ...suit.metadata };
-        delete metadata.category;
-        delete metadata.price;
-        delete metadata.group;
-        const prObj = {
-          name: suit.name,
-          description: suit.description,
-          features: suit.marketing_features.map((f) => f.name),
-          price: parseInt(suit.metadata.price),
-        };
-        if (Object.keys(metadata).length > 0) prObj.metadata = metadata;
 
-        prodCat.products.push(prObj);
+        prodCat.products.push(prodObj);
       } else {
-        const metadata = { ...suit.metadata };
-        delete metadata.category;
-        delete metadata.price;
-        delete metadata.group;
         let products = [];
-        const prodObj = {
-          name: suit.name,
-          description: suit.description,
-          features: suit.marketing_features.map((f) => f.name),
-          price: parseInt(suit.metadata.price),
-        };
-        if (Object.keys(metadata).length > 0) prodObj.metadata = metadata;
         products.push(prodObj);
         const obj = {
           category: suit.metadata.category,
