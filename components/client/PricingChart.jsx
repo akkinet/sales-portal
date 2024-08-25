@@ -2,12 +2,13 @@
 import React, { useState, useMemo } from "react";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import Image from "next/image";
+import { Header } from '../client/Header'
 import {
   sortByTotalPrice,
   sortByFeatureCount,
 } from "../../app/utils/helperFunctions";
 import toast, { Toaster } from "react-hot-toast";
- 
+
 const PricingChart = ({ packages, suits }) => {
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [selectedGroups, setSelectedGroups] = useState([]);
@@ -15,9 +16,8 @@ const PricingChart = ({ packages, suits }) => {
   const [products, setProducts] = useState(packages);
   const [showProducts, setShowProducts] = useState(true);
   const [showOptions, setShowOptions] = useState(true);
- 
+
   const packagesOption = useMemo(() => packages.map((p) => p.category), []);
- 
   const groupsOption = useMemo(() => groups.map((p) => p.group), []);
   const featuresOption = useMemo(
     () =>
@@ -32,7 +32,7 @@ const PricingChart = ({ packages, suits }) => {
     []
   );
   const [selectedFeatures, setSelectedFeatures] = useState(featuresOption);
- 
+
   const toggleProduct = async (product) => {
     const urlSearchParams = new URLSearchParams();
     if (selectedGroups.length > 0) urlSearchParams.set("group", selectedGroups);
@@ -69,7 +69,7 @@ const PricingChart = ({ packages, suits }) => {
     setSelectedFeatures(reorderedData);
     setProducts(p_data);
   };
- 
+
   const toggleOption = async (group) => {
     const urlSearchParams = new URLSearchParams();
     if (selectedProducts.length > 0)
@@ -101,22 +101,22 @@ const PricingChart = ({ packages, suits }) => {
     setProducts(p_data);
     setGroups(g_data.sort(sortByTotalPrice));
   };
- 
+
   const toggleProductsVisibility = () => {
     setShowProducts(!showProducts);
   };
- 
+
   const toggleOptionsVisibility = () => {
     setShowOptions(!showOptions);
   };
- 
+
   const copyUrlHandler = () => {
     const urlSearchParams = new URLSearchParams();
     if (selectedProducts.length > 0)
       urlSearchParams.set("category", selectedProducts);
     if (selectedGroups.length > 0) urlSearchParams.set("group", selectedGroups);
     const queryString = urlSearchParams.toString();
- 
+
     navigator.clipboard.writeText(`${window.location.origin}/price?${queryString}`)
       .then(() => {
         toast.success('URL copied Successfully');
@@ -125,7 +125,7 @@ const PricingChart = ({ packages, suits }) => {
         toast.error('Failed to copy URL.');
       });
   }
- 
+
   const clearFilter = async () => {
     setSelectedFeatures(featuresOption);
     setSelectedProducts([]);
@@ -133,19 +133,21 @@ const PricingChart = ({ packages, suits }) => {
     setProducts(packages);
     setGroups(suits.sort(sortByTotalPrice));
   };
- 
+
   const checkOutHandler = async (prices) => {
     const res = await fetch("/api/payment", {
       method: "POST",
       body: JSON.stringify(prices),
     });
     const payLink = await res.json();
- 
+
     window.location.href = payLink.url;
   };
- 
+
   return (
-    <div className='flex flex-col lg:flex-row bg-gray-300 '>
+    <>
+      <Header />
+      <div className='flex flex-col lg:flex-row bg-gray-300 '>
         <Toaster position="top-center" reverseOrder={false} />
         {/* left container component */}
         <div className="lg:w-[20%] p-4 bg-gray-200">
@@ -220,167 +222,163 @@ const PricingChart = ({ packages, suits }) => {
               </div>
             )}
           </div>
- 
+
           <button
             onClick={copyUrlHandler}
             className="ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md"
           >
             Copy URL
           </button>
-          <button
-            className="ml-[15%] w-[70%] p-2 mt-4 text-2xl font-bold bg-cyan-600 text-white hover:text-white hover:bg-black rounded-md"
-          >
-            Log Out
-          </button>
+        
         </div>
         {/* right container component  */}
-      <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center '>
-        <div className=' inner-right  '>
-          <div className='grid grid-cols-1 md:grid-cols-4 gap-1 '>
-            <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
-            {groups?.map((g, i) => (
-              <div
-                key={i}
-                className="text-center text-2xl bg-cyan-600 text-white p-3 capitalize "
-              >
-                {g.group}
-              </div>
-            ))}
-          </div>
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
-      <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Sales <br /> Portal</div>
-      {groups?.map((g, i) => (
-        <div key={i} className="relative text-center">
-          <Image
-            src="https://res.cloudinary.com/dduiqwdtr/image/upload/v1723184590/Hexerve%20website%20assets/trianglePink.png"
-            alt="Triangle Pink"
-            width={350}
-            height={100}
-            priority
-            className="w-full"
-          />
-          <div className="absolute  inset-0 flex flex-col justify-center items-center text-white lg:text-md text-xl">
-            <span>$ {g.totalPrice} Per Month </span>
-          </div>
-        </div>
-      ))}
-    </div>
- 
-    <div className="overflow-x-auto">
-      {products?.map((p, inx) => (
-        <React.Fragment key={JSON.stringify(p)}>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4 ">
-            <div className="col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center ">
-              {p.category}
-            </div>
-            {sortByFeatureCount(p.products).map((pro) => (
-              <div
-                key={JSON.stringify(pro.name)}
-                className="flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center "
-              >
-                {pro.name}
-              </div>
-            ))}
-          </div>
-          {"metadata" in p.products[0] && (
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-1" >
-              <div className=" col-span-1 bg-gray-100 h-full ">
-                {Object.keys(p.products[0]?.metadata).map((i) => (
-                  <div
-                    key={i}
-                    className="text-center text-lg font-semibold px-3 py-3 mb-1  border-b-2 border-gray-300  capitalize "
-                  >
-                    {i}
-                  </div>
-                ))}
-              </div>
-              {sortByFeatureCount(p.products).map((pro) => (
-                <div
-                  key={JSON.stringify(pro)}
-                  className="text-sm  col-span-1 bg-gray-100 h-full "
-                >
-                  {Object.values(pro.metadata).map((i) => (
-                    <div
-                      key={i}
-                      className="flex justify-center items-center p-3 py-4 mb-1 border-b-2 border-gray-300 "
-                    >
-                      {i}
-                    </div>
-                  ))}
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-1 ">
-            <div className="col-span-1 bg-gray-100 h-[98%] ">
-              {selectedFeatures[inx]?.features.map((i) => (
+        <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center '>
+          <div className=' inner-right  '>
+            <div className='grid grid-cols-1 md:grid-cols-4 gap-1 '>
+              <div className='text-center text-2xl text-white p-3 bg-cyan-600 '></div>
+              {groups?.map((g, i) => (
                 <div
                   key={i}
-                  className="text-center font-semibold px-3 py-4 mb-1 border-b-2 border-gray-300 capitalize"
+                  className="text-center text-2xl bg-cyan-600 text-white p-3 capitalize "
                 >
-                  {i}
+                  {g.group}
                 </div>
               ))}
             </div>
-            {sortByFeatureCount(p.products).map((pro) => (
-              <div
-                key={JSON.stringify(pro)}
-                className="text-sm col-span-1 bg-gray-100 h-[98%]"
-              >
-                {selectedFeatures[inx]?.features.map((i) => (
-                  <div
-                    key={i}
-                    className="flex justify-center items-center p-3 mb-1 border-b-2 border-gray-300"
-                  >
-                    {pro.features.includes(i) ? (
-                      <div className="text-green-500 text-2xl">✔️</div>
-                    ) : (
-                      <div className="text-red-500 text-2xl">❌</div>
-                    )}
+            <div className='grid grid-cols-1 md:grid-cols-4 gap-1 pb-4'>
+              <div className='text-center text-5xl text-white p-3 bg-cyan-600 pt-4 '>Sales <br /> Portal</div>
+              {groups?.map((g, i) => (
+                <div key={i} className="relative text-center">
+                  <Image
+                    src="https://res.cloudinary.com/dduiqwdtr/image/upload/v1723184590/Hexerve%20website%20assets/trianglePink.png"
+                    alt="Triangle Pink"
+                    width={350}
+                    height={100}
+                    priority
+                    className="w-full"
+                  />
+                  <div className="absolute  inset-0 flex flex-col justify-center items-center text-white lg:text-md text-xl">
+                    <span>$ {g.totalPrice} Per Month </span>
                   </div>
-                ))}
+                </div>
+              ))}
+            </div>
+
+            <div className="overflow-x-auto">
+              {products?.map((p, inx) => (
+                <React.Fragment key={JSON.stringify(p)}>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4 pb-4 ">
+                    <div className="col-span-1 text-center text-2xl bg-cyan-600 text-white p-3 flex items-center justify-center ">
+                      {p.category}
+                    </div>
+                    {sortByFeatureCount(p.products).map((pro) => (
+                      <div
+                        key={JSON.stringify(pro.name)}
+                        className="flex items-center justify-center text-2xl bg-cyan-600 text-white p-3 text-center "
+                      >
+                        {pro.name}
+                      </div>
+                    ))}
+                  </div>
+                  {"metadata" in p.products[0] && (
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-1" >
+                      <div className=" col-span-1 bg-gray-100 h-full ">
+                        {Object.keys(p.products[0]?.metadata).map((i) => (
+                          <div
+                            key={i}
+                            className="text-center text-lg font-semibold px-3 py-3 mb-1  border-b-4 border-gray-300  capitalize "
+                          >
+                            {i}
+                          </div>
+                        ))}
+                      </div>
+                      {sortByFeatureCount(p.products).map((pro) => (
+                        <div
+                          key={JSON.stringify(pro)}
+                          className="md:text-sm lg:text-sm  col-span-1 bg-gray-100 h-full "
+                        >
+                          {Object.values(pro.metadata).map((i) => (
+                            <div
+                              key={i}
+                              className="flex justify-center items-center p-3 py-4 mb-1 border-b-4 border-gray-300  text-sm"
+                            >
+                              {i}
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-1 ">
+                    <div className="col-span-1 bg-gray-100 h-[98%] ">
+                      {selectedFeatures[inx]?.features.map((i) => (
+                        <div
+                          key={i}
+                          className="text-center font-semibold px-3 py-4 mb-1 border-b-4 border-gray-300 capitalize"
+                        >
+                          {i}
+                        </div>
+                      ))}
+                    </div>
+                    {sortByFeatureCount(p.products).map((pro) => (
+                      <div
+                        key={JSON.stringify(pro)}
+                        className="text-sm col-span-1 bg-gray-100 h-[98%]"
+                      >
+                        {selectedFeatures[inx]?.features.map((i) => (
+                          <div
+                            key={i}
+                            className="flex justify-center items-center p-3 mb-1 border-b-4 border-gray-300"
+                          >
+                            {pro.features.includes(i) ? (
+                              <div className="text-green-500 text-2xl">✔️</div>
+                            ) : (
+                              <div className="text-red-500 text-2xl">❌</div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                  </div>
+                </React.Fragment>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4">
+              <div className="text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug ">
+                <p>Expected</p>
+                <p>Results</p>
               </div>
-            ))}
+              {groups?.map((g) => (
+                <div
+                  key={g.group}
+                  className="text-center text-lg bg-cyan-600 text-white p-3 "
+                >
+                  <p className="mb-4">{g.expectedOutput}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-1">
+              <div className="col-span-1 flex justify-center bg-cyan-600 p-7 "></div>
+              {groups?.map((g) => (
+                <div
+                  key={g.group}
+                  className="col-span-1 flex justify-center bg-cyan-600 p-2"
+                >
+                  <button
+                    onClick={() => checkOutHandler(g.prices)}
+                    className="bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700"
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
-        </React.Fragment>
-      ))}
-    </div>
- 
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-4">
-      <div className="text-center text-4xl bg-cyan-600 text-white p-3  font-bold leading-snug ">
-        <p>Expected</p>
-        <p>Results</p>
-      </div>
-      {groups?.map((g) => (
-        <div
-          key={g.group}
-          className="text-center text-lg bg-cyan-600 text-white p-3 "
-        >
-          <p className="mb-4">{g.expectedOutput}</p>
-        </div>
-      ))}
-    </div>
- 
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-1 mt-1">
-      <div className="col-span-1 flex justify-center bg-cyan-600 p-7 "></div>
-      {groups?.map((g) => (
-        <div
-          key={g.group}
-          className="col-span-1 flex justify-center bg-cyan-600 p-2"
-        >
-          <button
-            onClick={() => checkOutHandler(g.prices)}
-            className="bg-pink-600 text-white px-8 py-2 rounded focus:bg-pink-700"
-          >
-            Buy Now
-          </button>
-        </div>
-      ))}
-    </div>
-  </div>
-      </div >
-    </div >
+        </div >
+      </div ></>
   );
 };
- 
+
 export default PricingChart;
