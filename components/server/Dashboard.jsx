@@ -1,6 +1,7 @@
 import { headers } from 'next/headers';
 import PricingChart from '../client/PricingChart';
 import Modified from '../client/Modified';
+import Invoice from '../client/Invoice';
 
 const fetchApi = async () => {
     const head = headers()
@@ -14,8 +15,9 @@ const Dashboard = async () => {
     const { packages, suits } = await fetchApi()
 
     return (
+        <Invoice packages={packages} suits={suits}/>
         // <PricingChart packages={packages} suits={suits} />
-        <Modified packages={packages} suits={suits} />
+        // <Modified packages={packages} suits={suits} />
     )
 }
 
