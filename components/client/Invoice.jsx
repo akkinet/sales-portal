@@ -1,8 +1,7 @@
 "use client";
 import React, { useMemo, useState } from "react";
 
-const Invoice = ({ packages, suits }) => {
-  console.log("pack", packages);
+const Invoice = ({ packages }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const products = useMemo(
@@ -48,6 +47,23 @@ const Invoice = ({ packages, suits }) => {
     setRows(updatedRows);
   };
 
+  const generateInvoice = async () => {
+    let res = await fetch("/api/invoice", {
+      method: "POST",
+      body: JSON.stringify({
+        name, email, products: rows
+      })
+    })
+    res = await res.json()
+    if(res){
+      console.log("res", res)
+      alert("invoice sent");
+      setRows([]);
+      setName('');
+      setEmail('')
+    }
+  }
+
   return (
     <div className="invoice-containe w-full h-[100vh] p-12 flex items-center justify-center">
       <div className="border-2 border-red-500 w-[80%] h-full p-1">
@@ -63,6 +79,8 @@ const Invoice = ({ packages, suits }) => {
             type="text"
             id="name"
             name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <label className="text-2xl px-3" htmlFor="email">
             Client's Email:
@@ -71,6 +89,8 @@ const Invoice = ({ packages, suits }) => {
             className="border-2 border-cyan-500 text-2xl px-2 w-[40%]"
             type="email"
             id="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             name="email"
           />
         </div>
@@ -147,7 +167,7 @@ const Invoice = ({ packages, suits }) => {
           </button>
         </div>
         <div className="w-full flex justify-center mt-3">
-          <button className="border-2 px-5 rounded-lg bg-green-500 text-white mr-2 text-center text-2xl">
+          <button onClick={generateInvoice} className="border-2 px-5 rounded-lg bg-green-500 text-white mr-2 text-center text-2xl">
             Send Payment Link
           </button>
         </div>
