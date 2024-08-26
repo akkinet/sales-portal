@@ -44,7 +44,7 @@ const Invoice = () => {
   };
 
   return (
-    <div className="invoice-containe w-full h-[100vh] p-12 flex items-center justify-center">
+    <div className="invoice-containe w-full h-full p-12 flex items-center justify-center">
       <div className="border-2 border-red-500 w-[80%] h-full p-1">
         <div className="flex items-center justify-center w-full lg:text-4xl bg-cyan-600 text-white py-1">
           <h1>Invoice</h1>
@@ -72,15 +72,16 @@ const Invoice = () => {
         <div className="flex items-start justify-center w-full lg:text-4xl py-1 bg-cyan-600 text-white">
           <h1>Product List</h1>
         </div>
-        <div className="flex justify-between flex-col">
-          <table className="w-full mt-2">
+       <div className="">
+       <div className="flex justify-between flex-col">
+          <table className=" w-full mt-2 border-separate">
             <thead>
               <tr>
-                <th className="border-2 border-red-500">Sno.</th>
-                <th className="border-2 border-red-500">Product Name</th>
-                <th className="border-2 border-red-500">Price</th>
-                <th className="border-2 border-red-500">Qty</th>
-                <th className="border-2 border-red-500">Add / Remove</th>
+                <th className="border-2 border-red-500 text-2xl">Sno.</th>
+                <th className="border-2 border-red-500 text-2xl">Product Name</th>
+                <th className="border-2 border-red-500 text-2xl">Price</th>
+                <th className="border-2 border-red-500 text-2xl">Qty</th>
+                <th className="border-2 border-red-500 text-2xl">Add / Remove</th>
               </tr>
             </thead>
             <tbody>
@@ -155,6 +156,7 @@ const Invoice = () => {
             Send Payment Link
           </button>
         </div>
+       </div>
       </div>
     </div>
   );
