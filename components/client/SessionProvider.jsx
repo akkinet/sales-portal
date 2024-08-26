@@ -9,7 +9,7 @@ function SessionProvider({ children, session }) {
     if (!session || !session?.user) {
       router.push('/login');
     }
-  }, [])
+  }, [session])
   return (
     <SP session={session}>
       {children}
