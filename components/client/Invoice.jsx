@@ -1,40 +1,45 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-const Invoice = () => {
-  const [rows, setRows] = useState([
-    { id: 1, name: "Seo Advanced", price: '1225', qty: 1, added: false },
-  ]);
+const Invoice = ({ packages, suits }) => {
+  console.log("pack", packages);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const products = useMemo(
+    () =>
+      packages
+        .map((p) => p.products)
+        .flat()
+        .map((p) => ({
+          id: p.id,
+          name: p.name,
+          description: p.description,
+          price: p.price,
+          quantity: 1
+        })),
+    [packages]
+  );
+  const [rows, setRows] = useState([products[0]]);
 
-  const productOptions = ["Seo Advanced", "Seo Basic", "Seo Pro", "Seo Ultra"];
   const quantityOptions = [1, 2, 3, 4, 5];
 
   const handleAddRow = () => {
-    const newRow = {
-      id: rows.length + 1,
-      name: "Seo Advanced",
-      price: 1200,
-      qty: 1,
-      added: false,
-    };
-    setRows([...rows, newRow]);
+    setRows([...rows, products[0]]);
   };
 
   const handleProductChange = (index, newProductName) => {
     const updatedRows = [...rows];
-    updatedRows[index].name = newProductName;
+    updatedRows[index] = products.find(p => p.id == newProductName)
     setRows(updatedRows);
   };
+
+  const priceChange = (id, value) => {
+    setRows(rows.map(p => p.id == id ? {...p, price: parseInt(value)} : p));
+  }
 
   const handleQtyChange = (index, newQty) => {
     const updatedRows = [...rows];
-    updatedRows[index].qty = newQty;
-    setRows(updatedRows);
-  };
-
-  const handleAdd = (index) => {
-    const updatedRows = [...rows];
-    updatedRows[index].added = true;
+    updatedRows[index].quantity = parseInt(newQty);
     setRows(updatedRows);
   };
 
@@ -85,27 +90,27 @@ const Invoice = () => {
             </thead>
             <tbody>
               {rows.map((row, index) => (
-                <tr key={index}>
+                <tr key={row.id}>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
                     {index + 1}.
                   </td>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
                     <select
                       className=" text-xl p-1"
-                      value={row.name}
+                      value={row.id}
                       onChange={(e) =>
                         handleProductChange(index, e.target.value)
                       }
                     >
-                      {productOptions.map((product, idx) => (
-                        <option key={idx} value={product}>
-                          {product}
+                      {products.map((product) => (
+                        <option key={product.id} value={product.id}>
+                          {product.name}
                         </option>
                       ))}
                     </select>
                   </td>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
-                    ${row.price}
+                    <input onChange={(e) => priceChange(row.id, e.target.value)} value={row.price} />
                   </td>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
                     <select
@@ -121,15 +126,6 @@ const Invoice = () => {
                     </select>
                   </td>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
-                    <button
-                      className={`border-2 px-5 rounded-lg ${
-                        row.added ? "bg-gray-400" : "bg-green-500"
-                      } text-white mr-2`}
-                      onClick={() => handleAdd(index)}
-                      disabled={row.added}
-                    >
-                      {row.added ? "Added" : "Add"}
-                    </button>
                     <button
                       className="border-2 px-5 rounded-lg bg-red-500 text-white"
                       onClick={() => handleRemove(index)}
