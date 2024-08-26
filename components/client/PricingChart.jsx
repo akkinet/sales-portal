@@ -229,7 +229,7 @@ const PricingChart = ({ packages, suits }) => {
           >
             Copy URL
           </button>
-        
+
         </div>
         {/* right container component  */}
         <div className='right-container lg:w-[80%] w-full p-4 flex items-center justify-center '>
@@ -300,7 +300,7 @@ const PricingChart = ({ packages, suits }) => {
                           {Object.values(pro.metadata).map((i) => (
                             <div
                               key={i}
-                              className="flex justify-center items-center p-3 py-4 mb-1 border-b-4 border-gray-300  text-sm"
+                              className="flex justify-center items-center p-3 py-4  mb-1 border-b-4 border-gray-300 text-sm"
                             >
                               {i}
                             </div>
