@@ -15,8 +15,8 @@ const Dashboard = async () => {
     const { packages, suits } = await fetchApi()
 
     return (
-        <Invoice packages={packages} suits={suits}/>
-        // <PricingChart packages={packages} suits={suits} />
+        // <Invoice packages={packages} suits={suits}/>
+        <PricingChart packages={packages} suits={suits} />
         // <Modified packages={packages} suits={suits} />
     )
 }
