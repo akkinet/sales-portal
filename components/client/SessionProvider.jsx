@@ -1,15 +1,19 @@
 'use client'
 import { SessionProvider as SP } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+// import { useEffect } from 'react';
 
 function SessionProvider({ children, session }) {
   const router = useRouter();
-  useEffect(() => {
-    if (!session || !session?.user) {
-      router.push('/login');
-    }
-  }, [session])
+  // useEffect(() => {
+  //   if (!session || !session?.user) {
+  //     router.push('/login');
+  //   }
+  // }, [session])
+  if (!session || !session?.user) {
+    router.push('/login');
+    return;
+  }
   return (
     <SP session={session}>
       {children}

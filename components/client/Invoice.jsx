@@ -65,7 +65,7 @@ const Invoice = ({ packages }) => {
   }
 
   return (
-    <div className="invoice-containe w-full h-full p-12 flex items-center justify-center">
+    <div className="invoice-containe w-full h-full p-12 flex items-center justify-center border-2 border-red-500">
       <div className="border-2 border-red-500 w-[80%] h-full p-1">
         <div className="flex items-center justify-center w-full lg:text-4xl bg-cyan-600 text-white py-1">
           <h1>Invoice</h1>
