@@ -106,7 +106,7 @@ const Invoice = ({ packages }) => {
                 <th className="border-2 border-red-500 text-2xl">Product Name</th>
                 <th className="border-2 border-red-500 text-2xl">Price</th>
                 <th className="border-2 border-red-500 text-2xl">Qty</th>
-                <th className="border-2 border-red-500 text-2xl">Add / Remove</th>
+                <th className="border-2 border-red-500 text-2xl">Remove</th>
               </tr>
             </thead>
             <tbody>
@@ -130,7 +130,7 @@ const Invoice = ({ packages }) => {
                       ))}
                     </select>
                   </td>
-                  <td className="border-2 border-red-500 text-center p-2 text-xl">
+                  <td className="border-2 border-red-500 text-center p-2 text-xl ">
                     <input onChange={(e) => priceChange(row.id, e.target.value)} value={row.price} />
                   </td>
                   <td className="border-2 border-red-500 text-center p-2 text-xl">
