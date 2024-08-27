@@ -1,7 +1,7 @@
 'use client'
 import { SessionProvider as SP } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
-// import { useEffect } from 'react';
+import { useCallback } from 'react';
 
 function SessionProvider({ children, session }) {
   const router = useRouter();
@@ -10,10 +10,13 @@ function SessionProvider({ children, session }) {
   //     router.push('/login');
   //   }
   // }, [session])
-  if (!session || !session?.user) {
-    router.push('/login');
-    return;
-  }
+  const checkSession = useCallback(() => {
+    if (!session || !session?.user) {
+      router.push('/login');
+      return;
+    }
+  }, [session])
+  checkSession()
   return (
     <SP session={session}>
       {children}
