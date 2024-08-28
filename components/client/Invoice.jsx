@@ -1,7 +1,6 @@
 'use client'
 import React, { useMemo, useState } from 'react'
 import { Header } from './Header'
-import Image from 'next/image'
 import toast, { Toaster } from 'react-hot-toast'
 
 const Invoice = ({ packages }) => {
@@ -27,6 +26,9 @@ const Invoice = ({ packages }) => {
 
   const handleAddRow = () => {
     setRows([...rows, products[0]])
+    toast.success('Package added successfully!', {
+      position: 'top center'
+    })
   }
 
   const handleProductChange = (index, newProductName) => {
@@ -48,11 +50,16 @@ const Invoice = ({ packages }) => {
   const handleRemove = index => {
     const updatedRows = rows.filter((_, i) => i !== index)
     setRows(updatedRows)
+    toast.success('package deleted successfully!', {
+      position: 'top center'
+    })
   }
 
   const generateInvoice = async () => {
     if (!name || !email) {
-      toast.error('Please fill in the client\'s name and email.', { position: 'top-center' })
+      toast.error('Please fill in both name and email', {
+        position: 'top center'
+      })
       return
     }
 
@@ -66,18 +73,22 @@ const Invoice = ({ packages }) => {
     })
     res = await res.json()
     if (res) {
-      toast.success('Invoice sent successfully!', { position: 'top-center' })
+      toast.success('Invoice sent successfully!', {
+        position: ' top center'
+      })
       setRows([])
       setName('')
       setEmail('')
     } else {
-      toast.error('Failed to send invoice. Please try again.', { position: 'top-center' })
+      toast.error('Failed to send invoice. Please try again.', {
+        position: 'top center'
+      })
     }
   }
 
   return (
     <>
-      <Toaster position='top-center' reverseOrder={false} />
+      <Toaster />
       <div className='absolute w-full'>
         <Header />
       </div>
@@ -197,7 +208,7 @@ const Invoice = ({ packages }) => {
                 className=' border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl'
                 onClick={handleAddRow}
               >
-                Add Row
+                Add Package
               </button>
             </div>
             <div className='w-full flex justify-center mt-3'>
