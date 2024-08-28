@@ -2,6 +2,7 @@
 import React, { useMemo, useState } from 'react'
 import { Header } from './Header'
 import Image from 'next/image'
+import toast, { Toaster } from 'react-hot-toast'
 
 const Invoice = ({ packages }) => {
   const [name, setName] = useState('')
@@ -50,6 +51,11 @@ const Invoice = ({ packages }) => {
   }
 
   const generateInvoice = async () => {
+    if (!name || !email) {
+      toast.error('Please fill in the client\'s name and email.', { position: 'top-center' })
+      return
+    }
+
     let res = await fetch('/api/invoice', {
       method: 'POST',
       body: JSON.stringify({
@@ -60,22 +66,23 @@ const Invoice = ({ packages }) => {
     })
     res = await res.json()
     if (res) {
-      console.log('res', res)
-      alert('invoice sent')
+      toast.success('Invoice sent successfully!', { position: 'top-center' })
       setRows([])
       setName('')
       setEmail('')
+    } else {
+      toast.error('Failed to send invoice. Please try again.', { position: 'top-center' })
     }
   }
 
   return (
     <>
+      <Toaster position='top-center' reverseOrder={false} />
       <div className='absolute w-full'>
-        {' '}
         <Header />
       </div>
       <div className="invoice-container w-full h-[100vh] flex items-center justify-center bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')] bg-cover ">
-        <div className='border-4 border-pink-600 border-dashed lg:w-[80%] h-[80%] bg-white rounded-lg'>
+        <div className='border-x-4 border-y-4 border-x-cyan-600  border-y-pink-600 border-dashed lg:w-[80%] h-[80%] bg-white rounded-lg'>
           <div className='flex items-center justify-center w-full lg:text-4xl bg-cyan-600 text-white py-2'>
             <h1>Invoice</h1>
           </div>
@@ -107,7 +114,7 @@ const Invoice = ({ packages }) => {
             <h1>Product List</h1>
           </div>
           <div className=''>
-            <div className='flex justify-between flex-col h-[45vh] overflow-y-scroll'>
+            <div className='flex justify-between flex-col h-[36vh] overflow-y-scroll'>
               <table className='w-full mt-2 border-separate border-spacing-2'>
                 <thead>
                   <tr className=''>
