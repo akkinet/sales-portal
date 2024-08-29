@@ -119,11 +119,21 @@ const Invoice = ({ packages }) => {
   return (
     <>
       <Toaster />
+      <style jsx>{`
+        @media (max-width: 640px) {
+          .hide-arrow {
+            appearance: none;
+            background: transparent;
+            border: none;
+            padding: 0;
+          }
+        }
+      `}</style>
       <div className='absolute w-full'>
         <Header />
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
-        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150'
+        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
              style={{
                background: 'rgba(255, 255, 255, 0.3)',
                backdropFilter: 'blur(10px)',
@@ -190,7 +200,7 @@ const Invoice = ({ packages }) => {
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>{index + 1}.</td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
+                          className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
                           value={row.id}
                           onChange={e => handleProductChange(index, e.target.value)}
                           title={`Features:\n${row.features}${row?.metadata ? "\n\nMetadata:\n" + Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n') : ""}`}
@@ -214,7 +224,7 @@ const Invoice = ({ packages }) => {
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
+                          className='w-full text-sm sm:text-lg lg:text-xl lg:p-1 sm:p-0 rounded-md hide-arrow lg: text-center'
                           value={row.quantity}
                           onChange={e => handleQtyChange(index, e.target.value)}
                         >
@@ -238,14 +248,14 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='flex items-center justify-between p-4 lg:p-6'>
+            <div className='flex items-center lg:justify-between p-4 lg:p-6'>
               <button
                 className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
                 onClick={handleAddRow}
               >
                 Add Row
               </button>
-              <div className='text-xl sm:text-2xl lg:text-3xl font-bold'>
+              <div className='text-xl sm:text-2xl lg:text-3xl font-bold lg:ml-0 sm: ml-5'>
                 <span className='font-semibold'>Total Amount:</span> ${totalAmount.toFixed(2)}
               </div>
               <button
