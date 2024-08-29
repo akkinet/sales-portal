@@ -1,7 +1,7 @@
-"use client";
-import { SessionProvider as SP } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useCallback } from "react";
+'use client'
+import { SessionProvider as SP } from 'next-auth/react'
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 function SessionProvider({ children, session }) {
   const router = useRouter();
