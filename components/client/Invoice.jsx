@@ -9,17 +9,6 @@ const Invoice = ({ packages }) => {
   const [email, setEmail] = useState("");
   const [customers, setCustomers] = useState([]);
 
-  // Fetch customer data from the API when the component mounts
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      const response = await fetch(`/api/customer/${email}`);
-      const data = await response.json();
-      setCustomers(data.data); // Assuming the data is in `data.data`
-    };
-    if (email.length > 0) fetchCustomers();
-    else setCustomers([]);
-  }, [email]);
-
   const products = useMemo(
     () =>
       packages
@@ -105,11 +94,19 @@ const Invoice = ({ packages }) => {
     }
   };
 
-  const clientInfoHandler = (e) => {
+  const clientInfoHandler = async (e) => {
     const val = e.target.value.trim();
     setEmail(val);
-    const client = customers.find((c) => c.email.startsWith(val));
+    let data;
+    if (val.length > 0) {
+      const response = await fetch(`/api/customer/${val}`);
+      data = await response.json();
+      setCustomers(data.data); // Assuming the data is in `data.data`
+    } else setCustomers([]);
+
+    const client = data?.data.find((c) => c.email.startsWith(val)) || null;
     if (client) setName(client.name);
+    else setName("");
   };
 
   return (
