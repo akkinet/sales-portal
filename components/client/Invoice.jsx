@@ -1,5 +1,5 @@
 "use client";
-import React, { useMemo, useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Header } from "./Header";
 import toast, { Toaster } from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -7,6 +7,19 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 const Invoice = ({ packages }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [customers, setCustomers] = useState([]);
+
+  // Fetch customer data from the API when the component mounts
+  useEffect(() => {
+    const fetchCustomers = async () => {
+      const response = await fetch("http://localhost:3000/api/customer");
+      const data = await response.json();
+      setCustomers(data.data); // Assuming the data is in `data.data`
+    };
+
+    fetchCustomers();
+  }, []);
+
   const products = useMemo(
     () =>
       packages
@@ -55,7 +68,7 @@ const Invoice = ({ packages }) => {
   const handleRemove = (index) => {
     const updatedRows = rows.filter((_, i) => i !== index);
     setRows(updatedRows);
-    toast.success("package deleted successfully!", {
+    toast.success("Package deleted successfully!", {
       position: "top center",
     });
   };
@@ -109,23 +122,31 @@ const Invoice = ({ packages }) => {
               </label>
               <input
                 className="border-2 border-cyan-600 text-2xl px-2"
-                type="text"
                 id="name"
-                name="name"
                 value={name}
+                list="customer-names"
                 onChange={(e) => setName(e.target.value)}
               />
+              <datalist id="customer-names">
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.name} />
+                ))}
+              </datalist>
               <label className="text-2xl px-3" htmlFor="email">
                 Client's Email:
               </label>
               <input
                 className="border-2 border-cyan-500 text-2xl px-2 w-[40%]"
-                type="email"
                 id="email"
                 value={email}
+                list="customer-emails"
                 onChange={(e) => setEmail(e.target.value)}
-                name="email"
               />
+              <datalist id="customer-emails">
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.email} />
+                ))}
+              </datalist>
             </div>
             <div className="flex items-start justify-center w-full lg:text-4xl py-2 bg-cyan-600 text-white">
               <h1>Product List</h1>
@@ -174,7 +195,7 @@ const Invoice = ({ packages }) => {
                           </select>
                         </td>
                         <td className="border-2 border-pink-600 text-center p-2 text-2xl w-[15%]">
-                          <div className="flex items-center">
+                          <div className="flex items-center ml-12">
                             <span className="">$</span>
                             <input
                               onChange={(e) =>
@@ -218,13 +239,13 @@ const Invoice = ({ packages }) => {
                   className=" border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl"
                   onClick={handleAddRow}
                 >
-                  Add Package
+                  Add New Product
                 </button>
               </div>
               <div className="w-full flex justify-center mt-3">
                 <button
+                  className=" border-none px-5 rounded-lg bg-pink-600 py-1 text-white mr-2 text-center text-2xl"
                   onClick={generateInvoice}
-                  className=" border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl"
                 >
                   Send Invoice
                 </button>
