@@ -4,7 +4,7 @@ import { signOut } from "next-auth/react"; // Import signOut from next-auth
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedCurrency, setSelectedCurrency] = useState("US Dollars");
+  const [selectedCurrency, setSelectedCurrency] = useState("U.S.A");
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
