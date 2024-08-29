@@ -18,6 +18,7 @@ const Invoice = ({ packages }) => {
           id: p.id,
           name: p.name,
           description: p.description,
+          metadata: p.metadata,  // Added metadata
           price: p.price,
           quantity: 1
         })),
@@ -45,7 +46,7 @@ const Invoice = ({ packages }) => {
 
   const handleProductChange = (index, newProductId) => {
     const updatedRows = [...rows]
-    updatedRows[index] = products.find(p => p.id == newProductId)
+    updatedRows[index] = products.find(p => p.id === newProductId)
     setRows(updatedRows)
   }
 
@@ -192,6 +193,7 @@ const Invoice = ({ packages }) => {
                           className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
                           value={row.id}
                           onChange={e => handleProductChange(index, e.target.value)}
+                          title={`Description: ${row.description}\nMetadata: ${Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n')}`}
                         >
                           {products.map(product => (
                             <option
@@ -206,12 +208,8 @@ const Invoice = ({ packages }) => {
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <div className='flex justify-center items-center'>
-                          <span>$</span>
-                          <input
-                            value={row.price}
-                            className='w-16 sm:w-24 lg:w-32 ml-2 text-sm sm:text-lg text-center rounded-md'
-                            readOnly
-                          />
+                          <span className='text-xl'>$</span>
+                          <span className='text-lg sm:text-xl lg:text-2xl'>{row.price}</span>
                         </div>
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
@@ -220,8 +218,8 @@ const Invoice = ({ packages }) => {
                           value={row.quantity}
                           onChange={e => handleQtyChange(index, e.target.value)}
                         >
-                          {quantityOptions.map((qty, idx) => (
-                            <option key={idx} value={qty}>
+                          {quantityOptions.map(qty => (
+                            <option key={qty} value={qty}>
                               {qty}
                             </option>
                           ))}
@@ -229,10 +227,10 @@ const Invoice = ({ packages }) => {
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <button
-                          className='p-2 text-cyan-600 rounded-full hover:bg-gray-100'
+                          className='bg-red-500 text-white p-2 rounded-md'
                           onClick={() => handleRemove(index)}
                         >
-                          <RiDeleteBin6Line className='text-lg sm:text-2xl' />
+                          <RiDeleteBin6Line size={20} />
                         </button>
                       </td>
                     </tr>
@@ -240,29 +238,23 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='flex flex-col lg:flex-row justify-between items-center p-4 lg:p-6'>
-  <div className='flex flex-col lg:flex-row items-center mb-4 lg:mb-0'>
-    <button
-      className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl mb-2 lg:mb-0 lg:mr-2'
-      onClick={handleAddRow}
-    >
-      Add Package
-    </button>
-    <button
-      className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl'
-      onClick={generateInvoice}
-    >
-      Send Invoice
-    </button>
-  </div>
-  <div className='flex flex-col items-end'>
-    <div className='text-sm sm:text-lg lg:text-xl mb-2'>
-      <span className='font-semibold text-xl sm:text-2xl lg:text-3xl'>Total Amount:</span>
-      <span className='ml-2 text-xl sm:text-2xl lg:text-3xl'>${totalAmount.toFixed(2)}</span>
-    </div>
-  </div>
-</div>
-
+            <div className='flex items-center justify-between p-4 lg:p-6'>
+              <button
+                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
+                onClick={handleAddRow}
+              >
+                Add Row
+              </button>
+              <div className='text-xl sm:text-2xl lg:text-3xl font-bold'>
+                <span className='font-semibold'>Total Amount:</span> ${totalAmount.toFixed(2)}
+              </div>
+              <button
+                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
+                onClick={generateInvoice}
+              >
+                Generate Invoice
+              </button>
+            </div>
           </div>
         </div>
       </div>
