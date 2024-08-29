@@ -17,7 +17,7 @@ const Invoice = ({ packages }) => {
         .map(p => ({
           id: p.id,
           name: p.name,
-          description: p.description,
+          features: p.features,
           metadata: p.metadata,  // Added metadata
           price: p.price,
           quantity: 1
@@ -193,7 +193,7 @@ const Invoice = ({ packages }) => {
                           className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
                           value={row.id}
                           onChange={e => handleProductChange(index, e.target.value)}
-                          title={`Description: ${row.description}\nMetadata: ${Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n')}`}
+                          title={`Features:\n${row.features}${row?.metadata ? "\n\nMetadata:\n" + Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n') : ""}`}
                         >
                           {products.map(product => (
                             <option
