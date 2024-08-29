@@ -73,7 +73,8 @@ const Invoice = ({ packages }) => {
     });
   };
 
-  const generateInvoice = async () => {
+  const generateInvoice = async (event) => {
+    event.preventDefault();
     if (!name || !email) {
       toast.error("Please fill in both name and email", {
         position: "top center",
