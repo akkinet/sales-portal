@@ -49,15 +49,6 @@ const Invoice = ({ packages }) => {
     setRows(updatedRows)
   }
 
-  // Remove or comment out this function since price is no longer editable
-  // const priceChange = (id, value) => {
-  //   setRows(
-  //     rows.map(p =>
-  //       p.id == id ? { ...p, price: value == '' ? 0 : parseInt(value) } : p
-  //     )
-  //   )
-  // }
-
   const handleQtyChange = (index, newQty) => {
     const updatedRows = [...rows]
     updatedRows[index].quantity = parseInt(newQty)
@@ -131,7 +122,7 @@ const Invoice = ({ packages }) => {
         <Header />
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
-        <div className='create-invoice w-full max-w-6xl p-4 rounded-lg shadow-lg lg:mt-12 z-150'
+        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-12 z-150'
              style={{
                background: 'rgba(255, 255, 255, 0.3)',
                backdropFilter: 'blur(10px)',
@@ -140,15 +131,15 @@ const Invoice = ({ packages }) => {
         >
           <div className='bg-white rounded-lg'>
             <div className='text-center bg-cyan-600 text-white py-4 rounded-t-lg'>
-              <h1 className='text-3xl lg:text-5xl font-mono font-bold'>Create Invoice</h1>
+              <h1 className='text-2xl sm:text-3xl lg:text-5xl font-mono font-bold'>Create Invoice</h1>
             </div>
-            <div className='flex flex-col lg:flex-row items-center justify-between p-6'>
+            <div className='flex flex-col lg:flex-row items-center justify-between p-4 lg:p-6'>
               <div className='w-full mb-4 lg:mb-0 lg:mr-4'>
-                <label className='block text-lg lg:text-2xl mb-2 font-bold' htmlFor='name'>
+                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='name'>
                   Client's Name:
                 </label>
                 <input
-                  className='w-full border-2 border-cyan-600 text-lg lg:text-2xl px-2 py-1 rounded-md'
+                  className='w-full border-2 border-cyan-600 text-lg sm:text-xl lg:text-2xl px-2 py-1 rounded-md'
                   id='name'
                   value={name}
                   list='customer-names'
@@ -161,11 +152,11 @@ const Invoice = ({ packages }) => {
                 </datalist>
               </div>
               <div className='w-full'>
-                <label className='block text-lg lg:text-2xl mb-2 font-bold' htmlFor='email'>
+                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='email'>
                   Client's Email:
                 </label>
                 <input
-                  className='w-full border-2 border-cyan-600 text-lg lg:text-2xl px-2 py-1 rounded-md'
+                  className='w-full border-2 border-cyan-600 text-lg sm:text-xl lg:text-2xl px-2 py-1 rounded-md'
                   id='email'
                   value={email}
                   list='customer-emails'
@@ -179,17 +170,17 @@ const Invoice = ({ packages }) => {
               </div>
             </div>
             <div className='text-center bg-cyan-600 text-white py-4'>
-              <h1 className='text-2xl lg:text-4xl font-mono'>Product List</h1>
+              <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>Product List</h1>
             </div>
-            <div className='p-6 overflow-auto max-h-[250px]'>
+            <div className='p-4 lg:p-6 overflow-auto max-h-[300px]'>
               <table className='w-full text-left border-separate border-spacing-2'>
                 <thead>
                   <tr>
-                    <th className='border-b-2 border-pink-600 text-lg lg:text-2xl py-2 '>Sno.</th>
-                    <th className='border-b-2 border-pink-600 text-lg lg:text-2xl py-2 '>Product Name</th>
-                    <th className='border-b-2 border-pink-600 text-lg lg:text-2xl py-2 '>Price</th>
-                    <th className='border-b-2 border-pink-600 text-lg lg:text-2xl py-2 '>Qty</th>
-                    <th className='border-b-2 border-pink-600 text-lg lg:text-2xl py-2 '>Remove item</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Sno.</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Product Name</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Price</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Qty</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Remove item</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -198,7 +189,7 @@ const Invoice = ({ packages }) => {
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>{index + 1}.</td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-lg lg:text-xl p-1 rounded-md'
+                          className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
                           value={row.id}
                           onChange={e => handleProductChange(index, e.target.value)}
                         >
@@ -218,14 +209,14 @@ const Invoice = ({ packages }) => {
                           <span>$</span>
                           <input
                             value={row.price}
-                            className='w-16 lg:w-24 ml-2 text-lg text-center rounded-md'
+                            className='w-16 sm:w-24 lg:w-32 ml-2 text-sm sm:text-lg text-center rounded-md'
                             readOnly
                           />
                         </div>
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-lg lg:text-xl p-1 rounded-md'
+                          className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
                           value={row.quantity}
                           onChange={e => handleQtyChange(index, e.target.value)}
                         >
@@ -241,7 +232,7 @@ const Invoice = ({ packages }) => {
                           className='p-2 text-cyan-600 rounded-full hover:bg-gray-100'
                           onClick={() => handleRemove(index)}
                         >
-                          <RiDeleteBin6Line className='text-2xl' />
+                          <RiDeleteBin6Line className='text-lg sm:text-2xl' />
                         </button>
                       </td>
                     </tr>
@@ -249,25 +240,25 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='flex justify-between items-center p-6'>
-              <div className='flex space-x-4'>
+            <div className='flex flex-col lg:flex-row justify-between items-center p-4 lg:p-6'>
+              <div className='flex flex-col lg:flex-row items-center mb-4 lg:mb-0'>
                 <button
-                  className='px-5 py-2 bg-cyan-600 text-white rounded-lg text-lg lg:text-2xl'
+                  className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl mr-2'
                   onClick={handleAddRow}
                 >
                   Add Package
                 </button>
                 <button
-                  className='px-5 py-2 bg-cyan-600 text-white rounded-lg text-lg lg:text-2xl'
+                  className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl'
                   onClick={generateInvoice}
                 >
                   Send Invoice
                 </button>
               </div>
               <div className='flex flex-col items-end'>
-                <div className='text-lg lg:text-xl mb-2'>
-                  <span className='font-semibold text-2xl'>Total Amount:</span>
-                  <span className='ml-2'>${totalAmount.toFixed(2)}</span>
+                <div className='text-sm sm:text-lg lg:text-xl mb-2'>
+                  <span className='font-semibold text-xl sm:text-2xl lg:text-3xl'>Total Amount:</span>
+                  <span className='ml-2 text-xl sm:text-2xl lg:text-3xl'>${totalAmount.toFixed(2)}</span>
                 </div>
               </div>
             </div>
