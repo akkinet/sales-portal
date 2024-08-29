@@ -10,12 +10,6 @@ const nextConfig = {
       },
     ],
   },
-//   api: {
-//     bodyParser: true,
-//     middleware: [
-//         import('./app/api/middleware').default,
-//     ],
-//   },
 };
 
 export default nextConfig;

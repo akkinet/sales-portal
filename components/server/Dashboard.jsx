@@ -1,7 +1,7 @@
 import { headers } from 'next/headers';
-import PricingChart from '../client/PricingChart';
-import Modified from '../client/Modified';
-import Invoice from '../client/invoice';
+// import PricingChart from '../client/PricingChart';
+// import Modified from '../client/Modified';
+import Invoice from '../client/Invoice';
 
 const fetchApi = async () => {
     const head = headers()
