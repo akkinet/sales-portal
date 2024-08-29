@@ -10,13 +10,6 @@ function SessionProvider({ children, session }) {
       router.push('/login');
     }
   }, [session])
-  // const checkSession = useCallback(() => {
-  //   if (!session || !session?.user) {
-  //     router.push("/login");
-  //     return;
-  //   }
-  // }, [session]);
-  // checkSession();
   return <SP session={session}>{children}</SP>;
 }
 
