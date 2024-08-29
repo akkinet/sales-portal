@@ -241,27 +241,28 @@ const Invoice = ({ packages }) => {
               </table>
             </div>
             <div className='flex flex-col lg:flex-row justify-between items-center p-4 lg:p-6'>
-              <div className='flex flex-col lg:flex-row items-center mb-4 lg:mb-0'>
-                <button
-                  className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl mr-2'
-                  onClick={handleAddRow}
-                >
-                  Add Package
-                </button>
-                <button
-                  className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl'
-                  onClick={generateInvoice}
-                >
-                  Send Invoice
-                </button>
-              </div>
-              <div className='flex flex-col items-end'>
-                <div className='text-sm sm:text-lg lg:text-xl mb-2'>
-                  <span className='font-semibold text-xl sm:text-2xl lg:text-3xl'>Total Amount:</span>
-                  <span className='ml-2 text-xl sm:text-2xl lg:text-3xl'>${totalAmount.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
+  <div className='flex flex-col lg:flex-row items-center mb-4 lg:mb-0'>
+    <button
+      className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl mb-2 lg:mb-0 lg:mr-2'
+      onClick={handleAddRow}
+    >
+      Add Package
+    </button>
+    <button
+      className='px-4 py-2 bg-cyan-600 text-white rounded-lg text-sm sm:text-lg lg:text-2xl'
+      onClick={generateInvoice}
+    >
+      Send Invoice
+    </button>
+  </div>
+  <div className='flex flex-col items-end'>
+    <div className='text-sm sm:text-lg lg:text-xl mb-2'>
+      <span className='font-semibold text-xl sm:text-2xl lg:text-3xl'>Total Amount:</span>
+      <span className='ml-2 text-xl sm:text-2xl lg:text-3xl'>${totalAmount.toFixed(2)}</span>
+    </div>
+  </div>
+</div>
+
           </div>
         </div>
       </div>
