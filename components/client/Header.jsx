@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaGlobe } from 'react-icons/fa';
+import { signOut } from "next-auth/react"; // Import signOut from next-auth
 
 export const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -12,6 +13,10 @@ export const Header = () => {
   const handleCurrencyChange = (currency) => {
     setSelectedCurrency(currency);
     setIsDropdownOpen(false);
+  };
+  const handleLogout = () => {
+    signOut({ callbackUrl: "http://localhost:3000/api/auth/signOut" });
+    sessionStorage.clear();
   };
 
   return (
@@ -49,7 +54,7 @@ export const Header = () => {
             )}
           </div>
           <div className=" w-1/6 flex items-center justify-center">
-            <button className=" p-2 px-4 text-md  bg-[#1183a5] text-white hover:text-white hover:bg-black rounded-md">
+            <button className=" p-2 px-4 text-md  bg-[#1183a5] text-white hover:text-white hover:bg-black rounded-md" onClick={handleLogout}>
               Log Out
             </button>
           </div>  

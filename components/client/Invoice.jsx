@@ -4,6 +4,7 @@ import { Header } from "./Header";
 import toast, { Toaster } from "react-hot-toast";
 import { RiDeleteBin6Line } from "react-icons/ri";
 
+
 const Invoice = ({ packages }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -104,7 +105,6 @@ const Invoice = ({ packages }) => {
       });
     }
   };
-
   return (
     <>
       <Toaster />
@@ -112,9 +112,9 @@ const Invoice = ({ packages }) => {
         <Header />
       </div>
       <div className="invoice-container w-full h-[100vh] flex items-center justify-center bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')] bg-cover">
-        <div className=" lg:w-[80%] h-[80%] bg-gradient-to-r from-pink-600  to-cyan-600 p-1">
-          <div className=" bg-white h-full">
-            <div className="flex items-center justify-center w-full lg:text-4xl bg-cyan-600 text-white py-2 ">
+        <div className="lg:w-[80%] h-[80%] bg-gradient-to-r from-pink-600 to-cyan-600 p-1">
+          <div className="bg-white h-full">
+            <div className="flex items-center justify-center w-full lg:text-4xl bg-cyan-600 text-white py-2">
               <h1>Invoice</h1>
             </div>
             <div className="flex items-center justify-start p-2 py-6">
@@ -152,11 +152,11 @@ const Invoice = ({ packages }) => {
             <div className="flex items-start justify-center w-full lg:text-4xl py-2 bg-cyan-600 text-white">
               <h1>Product List</h1>
             </div>
-            <div className="">
+            <div>
               <div className="flex justify-between flex-col h-[36vh] overflow-y-scroll">
                 <table className="w-full mt-2 border-separate border-spacing-2">
                   <thead>
-                    <tr className="">
+                    <tr>
                       <th className="border-2 border-pink-600 text-2xl py-2">
                         Sno.
                       </th>
@@ -197,7 +197,7 @@ const Invoice = ({ packages }) => {
                         </td>
                         <td className="border-2 border-pink-600 text-center p-2 text-2xl w-[15%]">
                           <div className="flex items-center ml-12">
-                            <span className="">$</span>
+                            <span>$</span>
                             <input
                               onChange={(e) =>
                                 priceChange(row.id, e.target.value)
@@ -237,15 +237,13 @@ const Invoice = ({ packages }) => {
               </div>
               <div className="w-full flex justify-center mt-3">
                 <button
-                  className=" border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl"
+                  className="border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl"
                   onClick={handleAddRow}
                 >
-                  Add New Product
+                  Add Package
                 </button>
-              </div>
-              <div className="w-full flex justify-center mt-3">
                 <button
-                  className=" border-none px-5 rounded-lg bg-pink-600 py-1 text-white mr-2 text-center text-2xl"
+                  className="border-none px-5 rounded-lg bg-cyan-600 py-1 text-white mr-2 text-center text-2xl"
                   onClick={generateInvoice}
                 >
                   Send Invoice
