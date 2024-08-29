@@ -12,13 +12,13 @@ const Invoice = ({ packages }) => {
   // Fetch customer data from the API when the component mounts
   useEffect(() => {
     const fetchCustomers = async () => {
-      const response = await fetch("http://localhost:3000/api/customer");
+      const response = await fetch(`/api/customer/${email}`);
       const data = await response.json();
       setCustomers(data.data); // Assuming the data is in `data.data`
     };
-
-    fetchCustomers();
-  }, []);
+    if (email.length > 0) fetchCustomers();
+    else setCustomers([]);
+  }, [email]);
 
   const products = useMemo(
     () =>
@@ -105,6 +105,13 @@ const Invoice = ({ packages }) => {
     }
   };
 
+  const clientInfoHandler = (e) => {
+    const val = e.target.value.trim()
+    setEmail(val);
+    const client = customers.find((c) => c.email.startsWith(val));
+    if (client) setName(client.name);
+  };
+
   return (
     <>
       <Toaster />
@@ -125,14 +132,14 @@ const Invoice = ({ packages }) => {
                 className="border-2 border-cyan-600 text-2xl px-2"
                 id="name"
                 value={name}
-                list="customer-names"
+                // list="customer-names"
                 onChange={(e) => setName(e.target.value)}
               />
-              <datalist id="customer-names">
+              {/* <datalist id="customer-names">
                 {customers.map((customer) => (
                   <option key={customer.id} value={customer.name} />
                 ))}
-              </datalist>
+              </datalist> */}
               <label className="text-2xl px-3" htmlFor="email">
                 Client's Email:
               </label>
@@ -141,7 +148,7 @@ const Invoice = ({ packages }) => {
                 id="email"
                 value={email}
                 list="customer-emails"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={clientInfoHandler}
               />
               <datalist id="customer-emails">
                 {customers.map((customer) => (
