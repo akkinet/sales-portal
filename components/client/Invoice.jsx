@@ -122,7 +122,7 @@ const Invoice = ({ packages }) => {
         <Header />
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
-        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-12 z-150'
+        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150'
              style={{
                background: 'rgba(255, 255, 255, 0.3)',
                backdropFilter: 'blur(10px)',
@@ -186,7 +186,7 @@ const Invoice = ({ packages }) => {
                 <tbody>
                   {rows.map((row, index) => (
                     <tr key={row.id}>
-                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>{index + 1}.</td>
+                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>{index + 1}.</td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
                           className='w-full text-sm sm:text-lg lg:text-xl p-1 rounded-md'
