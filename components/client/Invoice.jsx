@@ -183,7 +183,7 @@ const Invoice = ({ packages }) => {
             <div className='text-center bg-cyan-600 text-white py-4'>
               <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>Product List</h1>
             </div>
-            <div className='p-4 lg:p-6 overflow-auto max-h-[300px]'>
+            <div className='p-4 lg:p-6 lg:pt-1 overflow-auto max-h-[225px]'>
               <table className='w-full text-left border-separate border-spacing-2'>
                 <thead>
                   <tr>
