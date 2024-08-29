@@ -50,6 +50,9 @@ export const POST = async (req) => {
       console.log("Invoice item created:", invoiceItem.id);
     }
 
+    const sentInvoice = await stripe.invoices.sendInvoice(invoice.id);
+    console.log(sentInvoice)
+
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -135,14 +138,14 @@ export const POST = async (req) => {
                 <p><strong>Invoice Number:</strong> ${invoice.id}</p>
                 <p><strong>Date of Issue:</strong> ${new Date()}</p>
                 <p><strong>Due Date:</strong> ${new Date(
-                  1725097281 * 1000
+                  sentInvoice.due_date * 1000
                 ).toLocaleString()}</p>
-                <p><strong>Amount Due:</strong> ${invoice.amount_due}</p>
+                <p><strong>Amount Due:</strong> ${sentInvoice.amount_due}</p>
             </div>
 
             <div class="payment-link">
                 <a href=${
-                  invoice.hosted_invoice_url
+                  sentInvoice.hosted_invoice_url
                 } target="_blank">Pay Invoice</a>
             </div>
 
@@ -158,9 +161,7 @@ export const POST = async (req) => {
 </html>
 `;
 
-    await sendMail(email, "Hexerve's Invoice", html);
-
-    const sentInvoice = await stripe.invoices.sendInvoice(invoice.id);
+    sendMail(email, "Hexerve's Invoice", html);
 
     return NextResponse.json(sentInvoice, { status: 200 });
   } catch (error) {
