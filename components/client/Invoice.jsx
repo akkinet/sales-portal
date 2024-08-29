@@ -10,17 +10,6 @@ const Invoice = ({ packages }) => {
   const [email, setEmail] = useState("");
   const [customers, setCustomers] = useState([]);
 
-  // Fetch customer data from the API when the component mounts
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      const response = await fetch("http://localhost:3000/api/customer");
-      const data = await response.json();
-      setCustomers(data.data); // Assuming the data is in `data.data`
-    };
-
-    fetchCustomers();
-  }, []);
-
   const products = useMemo(
     () =>
       packages
@@ -105,6 +94,22 @@ const Invoice = ({ packages }) => {
       });
     }
   };
+
+  const clientInfoHandler = async (e) => {
+    const val = e.target.value.trim();
+    setEmail(val);
+    let data;
+    if (val.length > 0) {
+      const response = await fetch(`/api/customer/${val}`);
+      data = await response.json();
+      setCustomers(data.data); // Assuming the data is in `data.data`
+    } else setCustomers([]);
+
+    const client = data?.data.find((c) => c.email.startsWith(val)) || null;
+    if (client) setName(client.name);
+    else setName("");
+  };
+
   return (
     <>
       <Toaster />
@@ -141,7 +146,7 @@ const Invoice = ({ packages }) => {
                 id="email"
                 value={email}
                 list="customer-emails"
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={clientInfoHandler}
               />
               <datalist id="customer-emails">
                 {customers.map((customer) => (
