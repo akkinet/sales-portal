@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
-import { getSession } from "next-auth/react";
-import { authOptions } from "./app/utils/authOptions";
+// import { getSession } from "next-auth/react";
+// import { authOptions } from "./app/utils/authOptions";
 
 export async function middleware(req) {
-  const session = await getSession(authOptions);
+  // const session = await getSession(authOptions);
   console.log("Request Method:", req.method);
   // console.log('Request URL:', req.url);
   console.log("Request Query:", req.query);

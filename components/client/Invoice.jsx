@@ -33,9 +33,9 @@ const Invoice = ({ packages }) => {
   };
 
   const priceChange = (id, value) => {
-    setRows(
-      rows.map((p) => (p.id == id ? { ...p, price: parseInt(value) } : p))
-    );
+      setRows(
+        rows.map((p) => (p.id == id ? { ...p, price: value == "" ? 0 : parseInt(value) } : p))
+      );
   };
 
   const handleQtyChange = (index, newQty) => {
@@ -59,13 +59,15 @@ const Invoice = ({ packages }) => {
       }),
     });
     res = await res.json();
-    if (res) {
-      console.log("res", res);
+    console.log("res", res);
+    if (!res.error) {
       alert("invoice sent");
       setRows([]);
       setName("");
       setEmail("");
+      return;
     }
+    alert("error", res.error)
   };
 
   return (
@@ -138,7 +140,7 @@ const Invoice = ({ packages }) => {
                     </td>
                     <td className="border-2 border-red-500 text-center p-2 text-xl">
                       <input
-                        onChange={(e) => priceChange(row.id, e.target.value)}
+                        onChange={(e) => priceChange(row.id, e.target.value.trim())}
                         value={row.price}
                       />
                     </td>

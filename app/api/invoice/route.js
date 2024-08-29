@@ -16,48 +16,42 @@ export const POST = async (req) => {
         name,
       });
     } else customer = customers.data[0];
-    
+
     console.log("Customer created:", customer.id);
-    
+    const due_date = new Date();
+    due_date.setDate(due_date.getDate() + 2);
+
     const invoice = await stripe.invoices.create({
       currency: "usd",
       auto_advance: true,
+      due_date,
       customer: customer.id,
       description:
-      "Harness the future of innovation and efficiency with our cutting-edge solutions",
+        "Harness the future of innovation and efficiency with our cutting-edge solutions",
+      collection_method: "send_invoice",
     });
-    
+
     console.log("Invoice created:", invoice.id);
-    
+
     for (const item of products) {
-      // const invoiceItem = await stripe.invoiceItems.create({
-        //   currency: "usd",
-        //   description: "(created by Stripe Shell)",
-        //   invoice: invoice.id,
-        //   customer: customer.id,
-        //   price: "price_1PqyyQEeHxYCAOIl853H7ceq",
-        //   quantity: 1,
-        // });
-        const invoiceItem = await stripe.invoiceItems.create({
-          description: item.description,
-          invoice: invoice.id,
-          quantity: item.quantity,
-          customer: customer.id,
-          currency: 'usd',
-          price_data: {
-            currency: 'usd',
-            product: item.id,
-            unit_amount: item.price * 100,
-          },
-        });
+      const invoiceItem = await stripe.invoiceItems.create({
+        description: item.description,
+        invoice: invoice.id,
+        quantity: item.quantity,
+        customer: customer.id,
+        currency: "usd",
+        price_data: {
+          currency: "usd",
+          product: item.id,
+          unit_amount: item.price * 100,
+        },
+      });
       console.log("Invoice item created:", invoiceItem.id);
     }
-    
-    const finalizedInvoice = await stripe.invoices.finalizeInvoice(invoice.id);
-    
-    console.log("Invoice finalized and sent:", finalizedInvoice.id);
 
-    return NextResponse.json(finalizedInvoice, { status: 200 });
+    const sentInvoice = await stripe.invoices.sendInvoice(invoice.id);
+
+    return NextResponse.json(sentInvoice, { status: 200 });
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
