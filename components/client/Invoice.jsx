@@ -111,7 +111,7 @@ const Invoice = ({ packages }) => {
     else setName('')
   }
 
-  const totalAmount = useMemo(() => 
+  const totalAmount = useMemo(() =>
     rows.reduce((total, row) => total + row.price * row.quantity, 0),
     [rows]
   )
@@ -134,11 +134,11 @@ const Invoice = ({ packages }) => {
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
         <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
-             style={{
-               background: 'rgba(255, 255, 255, 0.3)',
-               backdropFilter: 'blur(10px)',
-               border: '1px solid rgba(255, 255, 255, 0.2)',
-             }}
+          style={{
+            background: 'rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+          }}
         >
           <div className='bg-white rounded-lg'>
             <div className='text-center bg-cyan-600 text-white py-4 rounded-t-lg'>
@@ -249,12 +249,20 @@ const Invoice = ({ packages }) => {
               </table>
             </div>
             <div className='flex items-center lg:justify-between p-4 lg:p-6'>
-              <button
-                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
-                onClick={handleAddRow}
-              >
-                Add Row
-              </button>
+              <div>
+                <button
+                  className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
+                  onClick={handleAddRow}
+                >
+                  Add Row
+                </button>
+                <button
+                  className=' py-2 px-4  ml-2 text-cyan-600 hover:text-pink-500 lg:text-xl'
+                  // onclick={handleCoupons}
+                >
+                  Apply Coupons
+                </button>
+              </div>
               <div className='text-xl sm:text-2xl lg:text-3xl font-bold lg:ml-0 sm: ml-5'>
                 <span className='font-semibold'>Total Amount:</span> ${totalAmount.toFixed(2)}
               </div>
@@ -262,7 +270,7 @@ const Invoice = ({ packages }) => {
                 className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
                 onClick={generateInvoice}
               >
-                Generate Invoice
+                Send Invoice
               </button>
             </div>
           </div>
