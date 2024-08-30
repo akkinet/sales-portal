@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { Header } from './Header'
 import toast, { Toaster } from 'react-hot-toast'
 import { RiDeleteBin6Line } from 'react-icons/ri'
@@ -12,6 +12,21 @@ const Invoice = ({ packages }) => {
   const [coupons, setCoupons] = useState([])
   const [selectedCoupon, setSelectedCoupon] = useState('')
 
+  // Fetch coupons on component mount
+  useEffect(() => {
+    const fetchCoupons = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/coupon')
+        const data = await response.json()
+        setCoupons(data)
+      } catch (error) {
+        toast.error('Failed to load coupons.', { position: 'top center' })
+      }
+    }
+
+    fetchCoupons()
+  }, [])
+
   const products = useMemo(
     () =>
       packages
@@ -21,7 +36,7 @@ const Invoice = ({ packages }) => {
           id: p.id,
           name: p.name,
           features: p.features,
-          metadata: p.metadata, // Added metadata
+          metadata: p.metadata,
           price: p.price,
           quantity: 1
         })),
@@ -124,12 +139,6 @@ const Invoice = ({ packages }) => {
       ? amount * (1 - appliedCoupon.percent_off / 100)
       : amount
   }, [rows, appliedCoupon])
-
-  const handleCoupons = async () => {
-    const response = await fetch('http://localhost:3000/api/coupon')
-    const data = await response.json()
-    setCoupons(data)
-  }
 
   const applyCoupon = () => {
     const coupon = coupons.find(c => c.id === selectedCoupon)
@@ -274,11 +283,21 @@ const Invoice = ({ packages }) => {
                           onChange={e =>
                             handleProductChange(index, e.target.value)
                           }
-                          title={`Features:\n${row.features}${row?.metadata ? "\n\nMetadata:\n" + Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n') : ""}`}
-                          
+                          title={`Features:\n${row.features}${
+                            row?.metadata
+                              ? '\n\nMetadata:\n' +
+                                Object.entries(row.metadata || {})
+                                  .map(([key, value]) => `${key}: ${value}`)
+                                  .join('\n')
+                              : ''
+                          }`}
                         >
                           {products.map(product => (
-                            <option key={product.id} value={product.id} disabled={rows.some(r => r.id === product.id)}>
+                            <option
+                              key={product.id}
+                              value={product.id}
+                              disabled={rows.some(r => r.id === product.id)}
+                            >
                               {product.name}
                             </option>
                           ))}
@@ -313,76 +332,73 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='p-4 lg:p-6 lg:py-0'>
-  <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between'>
-    <div className='flex flex-wrap mb-4 lg:mb-0'>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700 lg:mr-4 mb-2 lg:mb-0'
-        onClick={handleAddRow}
-      >
-        Add Row
-      </button>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-        onClick={handleCoupons}
-      >
-        Load Coupons
-      </button>
-    </div>
-    <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between w-full lg:w-auto'>
-      <div className='text-lg sm:text-xl lg:text-2xl font-medium mb-4 lg:mb-0'>
-        Total Amount: ${totalAmount.toFixed(2)}
-        {appliedCoupon && (
-          <span className='text-red-600 text-sm lg:text-lg ml-2'>
-            ({appliedCoupon.percent_off}% off)
-          </span>
-        )}
-        {appliedCoupon && (
-          <div className='text-sm lg:text-lg mt-1'>
-            Discounted Amount: ${discountedAmount.toFixed(2)}
-          </div>
-        )}
-      </div>
-      <div className='flex items-center flex-wrap'>
-        <select
-          className='text-lg sm:text-xl lg:text-2xl p-2 rounded-md border-2 border-cyan-600 mb-2 lg:mb-0'
-          value={selectedCoupon}
-          onChange={e => setSelectedCoupon(e.target.value)}
-        >
-          <option value=''>Select Coupon</option>
-          {coupons.map(coupon => (
-            <option key={coupon.id} value={coupon.id}>
-              {coupon.code} - {coupon.percent_off}% off
-            </option>
-          ))}
-        </select>
-        <button
-          className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700 mb-2 lg:mb-0'
-          onClick={applyCoupon}
-        >
-          Apply Coupon
-        </button>
-        {appliedCoupon && (
-          <button
-            className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700'
-            onClick={removeCoupon}
-          >
-            Remove Coupon
-          </button>
-        )}
-      </div>
-    </div>
-    <div className='w-full lg:w-auto mt-4 lg:mt-0'>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
-        onClick={generateInvoice}
-      >
-        Generate Invoice
-      </button>
-    </div>
-  </div>
-</div>
-
+            <div className='lg:py-4'>
+              <div className='flex flex-col lg:flex-col items-start lg:items-center justify-between'>
+                {/* Button Row */}
+                <div className='flex flex-wrap mb-4 lg:mb-0 w-[97%]'>
+                  <button
+                    className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700 lg:mr-4 mb-2 lg:mb-0'
+                    onClick={handleAddRow}
+                  >
+                    Add Package
+                  </button>
+                  <div className='flex flex-wrap mt-4 lg:mt-0 lg:ml-auto'>
+                    <select
+                      className='text-lg sm:text-xl lg:text-2xl p-2 rounded-md border-2 border-cyan-600 mb-2 lg:mb-0'
+                      value={selectedCoupon}
+                      onChange={e => setSelectedCoupon(e.target.value)}
+                    >
+                      <option value=''>Select Coupon</option>
+                      {coupons.map(coupon => (
+                        <option key={coupon.id} value={coupon.id}>
+                          {coupon.code} - {coupon.percent_off}% off
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700 mb-2 lg:mb-0'
+                      onClick={applyCoupon}
+                    >
+                      Apply Coupon
+                    </button>
+                    {appliedCoupon && (
+                      <button
+                        className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700'
+                        onClick={removeCoupon}
+                      >
+                        Remove Coupon
+                      </button>
+                    )}
+                  </div>
+                </div>
+                {/* Total Amount and Discount Row */}
+                <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between w-full lg:w-[97%] mt-2'>
+                <div className='w-full lg:w-auto'>
+                    <button
+                      className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
+                      onClick={generateInvoice}
+                    >
+                      Generate Invoice
+                    </button>
+                  </div>
+                  <div className='text-lg sm:text-xl lg:text-2xl font-medium mb-4 lg:mb-0'>
+                   
+                    {appliedCoupon && (
+                      <div className='text-sm lg:text-lg mt-1'>
+                        Discounted Amount: ${discountedAmount.toFixed(2)}
+                      </div>
+                    )}
+                     Total Amount: ${totalAmount.toFixed(2)}
+                    {appliedCoupon && (
+                      <span className='text-red-600 text-sm lg:text-lg ml-2'>
+                        ({appliedCoupon.percent_off}% off)
+                      </span>
+                    )}
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
