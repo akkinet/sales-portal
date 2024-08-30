@@ -8,9 +8,6 @@ const Invoice = ({ packages }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [customers, setCustomers] = useState([])
-  const [appliedCoupon, setAppliedCoupon] = useState(null)
-  const [coupons, setCoupons] = useState([])
-  const [selectedCoupon, setSelectedCoupon] = useState('')
 
   const products = useMemo(
     () =>
@@ -21,13 +18,12 @@ const Invoice = ({ packages }) => {
           id: p.id,
           name: p.name,
           features: p.features,
-          metadata: p.metadata, // Added metadata
+          metadata: p.metadata,  // Added metadata
           price: p.price,
           quantity: 1
         })),
     [packages]
   )
-
   const [rows, setRows] = useState([products[0]])
 
   const quantityOptions = [1, 2, 3, 4, 5]
@@ -115,52 +111,10 @@ const Invoice = ({ packages }) => {
     else setName('')
   }
 
-  const totalAmount = useMemo(() => {
-    const amount = rows.reduce(
-      (total, row) => total + row.price * row.quantity,
-      0
-    )
-    return appliedCoupon
-      ? amount * (1 - appliedCoupon.percent_off / 100)
-      : amount
-  }, [rows, appliedCoupon])
-
-  const handleCoupons = async () => {
-    const response = await fetch('http://localhost:3000/api/coupon')
-    const data = await response.json()
-    setCoupons(data)
-  }
-
-  const applyCoupon = () => {
-    const coupon = coupons.find(c => c.id === selectedCoupon)
-    if (coupon) {
-      setAppliedCoupon(coupon)
-      toast.success(`Coupon applied: ${coupon.percent_off}% off`, {
-        position: 'top center'
-      })
-    } else {
-      toast.error('Invalid coupon selected', {
-        position: 'top center'
-      })
-    }
-  }
-
-  const removeCoupon = () => {
-    setAppliedCoupon(null)
-    setSelectedCoupon('')
-    toast.success('Coupon removed successfully!', { position: 'top center' })
-  }
-
-  const discountedAmount = useMemo(() => {
-    if (appliedCoupon) {
-      const amount = rows.reduce(
-        (total, row) => total + row.price * row.quantity,
-        0
-      )
-      return amount * (appliedCoupon.percent_off / 100)
-    }
-    return 0
-  }, [rows, appliedCoupon])
+  const totalAmount = useMemo(() => 
+    rows.reduce((total, row) => total + row.price * row.quantity, 0),
+    [rows]
+  )
 
   return (
     <>
@@ -179,26 +133,20 @@ const Invoice = ({ packages }) => {
         <Header />
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
-        <div
-          className='create-invoice w-full max-w-[80vw] p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
-          style={{
-            background: 'rgba(255, 255, 255, 0.3)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)'
-          }}
+        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
+             style={{
+               background: 'rgba(255, 255, 255, 0.3)',
+               backdropFilter: 'blur(10px)',
+               border: '1px solid rgba(255, 255, 255, 0.2)',
+             }}
         >
           <div className='bg-white rounded-lg'>
             <div className='text-center bg-cyan-600 text-white py-4 rounded-t-lg'>
-              <h1 className='text-2xl sm:text-3xl lg:text-5xl font-mono font-bold'>
-                Create Invoice
-              </h1>
+              <h1 className='text-2xl sm:text-3xl lg:text-5xl font-mono font-bold'>Create Invoice</h1>
             </div>
             <div className='flex flex-col lg:flex-row items-center justify-between p-4 lg:p-6'>
               <div className='w-full mb-4 lg:mb-0 lg:mr-4'>
-                <label
-                  className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold'
-                  htmlFor='name'
-                >
+                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='name'>
                   Client's Name:
                 </label>
                 <input
@@ -215,10 +163,7 @@ const Invoice = ({ packages }) => {
                 </datalist>
               </div>
               <div className='w-full'>
-                <label
-                  className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold'
-                  htmlFor='email'
-                >
+                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='email'>
                   Client's Email:
                 </label>
                 <input
@@ -236,60 +181,50 @@ const Invoice = ({ packages }) => {
               </div>
             </div>
             <div className='text-center bg-cyan-600 text-white py-4'>
-              <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>
-                Product List
-              </h1>
+              <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>Product List</h1>
             </div>
-            <div className='p-4 lg:p-6 lg:pt-1 overflow-auto max-h-[225px]'>
+            <div className='p-4 lg:p-6 overflow-auto max-h-[300px]'>
               <table className='w-full text-left border-separate border-spacing-2'>
                 <thead>
                   <tr>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
-                      Sno.
-                    </th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
-                      Product Name
-                    </th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
-                      Price
-                    </th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
-                      Qty
-                    </th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
-                      Remove item
-                    </th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Sno.</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Product Name</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Price</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Qty</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Remove item</th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((row, index) => (
                     <tr key={row.id}>
-                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>
-                        {index + 1}.
-                      </td>
+                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>{index + 1}.</td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
                           className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
                           value={row.id}
-                          onChange={e =>
-                            handleProductChange(index, e.target.value)
-                          }
+                          onChange={e => handleProductChange(index, e.target.value)}
                           title={`Features:\n${row.features}${row?.metadata ? "\n\nMetadata:\n" + Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n') : ""}`}
-                          
                         >
                           {products.map(product => (
-                            <option key={product.id} value={product.id} disabled={rows.some(r => r.id === product.id)}>
+                            <option
+                              key={product.id}
+                              value={product.id}
+                              disabled={rows.some(r => r.id === product.id)}
+                            >
                               {product.name}
                             </option>
                           ))}
                         </select>
                       </td>
-                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>
-                        ${row.price.toFixed(2)}
+                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
+                        <div className='flex justify-center items-center'>
+                          <span className='text-xl'>$</span>
+                          <span className='text-lg sm:text-xl lg:text-2xl'>{row.price}</span>
+                        </div>
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
+                          className='w-full text-sm sm:text-lg lg:text-xl lg:p-1 sm:p-0 rounded-md hide-arrow'
                           value={row.quantity}
                           onChange={e => handleQtyChange(index, e.target.value)}
                         >
@@ -302,10 +237,10 @@ const Invoice = ({ packages }) => {
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <button
-                          className='text-red-600 text-xl md:text-2xl lg:text-3xl'
+                          className='bg-red-500 text-white p-2 rounded-md'
                           onClick={() => handleRemove(index)}
                         >
-                          <RiDeleteBin6Line />
+                          <RiDeleteBin6Line size={20} />
                         </button>
                       </td>
                     </tr>
@@ -313,76 +248,23 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='p-4 lg:p-6 lg:py-0'>
-  <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between'>
-    <div className='flex flex-wrap mb-4 lg:mb-0'>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700 lg:mr-4 mb-2 lg:mb-0'
-        onClick={handleAddRow}
-      >
-        Add Row
-      </button>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-        onClick={handleCoupons}
-      >
-        Load Coupons
-      </button>
-    </div>
-    <div className='flex flex-col lg:flex-row items-start lg:items-center justify-between w-full lg:w-auto'>
-      <div className='text-lg sm:text-xl lg:text-2xl font-medium mb-4 lg:mb-0'>
-        Total Amount: ${totalAmount.toFixed(2)}
-        {appliedCoupon && (
-          <span className='text-red-600 text-sm lg:text-lg ml-2'>
-            ({appliedCoupon.percent_off}% off)
-          </span>
-        )}
-        {appliedCoupon && (
-          <div className='text-sm lg:text-lg mt-1'>
-            Discounted Amount: ${discountedAmount.toFixed(2)}
-          </div>
-        )}
-      </div>
-      <div className='flex items-center flex-wrap'>
-        <select
-          className='text-lg sm:text-xl lg:text-2xl p-2 rounded-md border-2 border-cyan-600 mb-2 lg:mb-0'
-          value={selectedCoupon}
-          onChange={e => setSelectedCoupon(e.target.value)}
-        >
-          <option value=''>Select Coupon</option>
-          {coupons.map(coupon => (
-            <option key={coupon.id} value={coupon.id}>
-              {coupon.code} - {coupon.percent_off}% off
-            </option>
-          ))}
-        </select>
-        <button
-          className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700 mb-2 lg:mb-0'
-          onClick={applyCoupon}
-        >
-          Apply Coupon
-        </button>
-        {appliedCoupon && (
-          <button
-            className='ml-2 text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-red-600 text-white rounded-md shadow-md hover:bg-red-700'
-            onClick={removeCoupon}
-          >
-            Remove Coupon
-          </button>
-        )}
-      </div>
-    </div>
-    <div className='w-full lg:w-auto mt-4 lg:mt-0'>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
-        onClick={generateInvoice}
-      >
-        Generate Invoice
-      </button>
-    </div>
-  </div>
-</div>
-
+            <div className='flex items-center lg:justify-between p-4 lg:p-6'>
+              <button
+                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
+                onClick={handleAddRow}
+              >
+                Add Row
+              </button>
+              <div className='text-xl sm:text-2xl lg:text-3xl font-bold lg:ml-0 sm: ml-5'>
+                <span className='font-semibold'>Total Amount:</span> ${totalAmount.toFixed(2)}
+              </div>
+              <button
+                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
+                onClick={generateInvoice}
+              >
+                Generate Invoice
+              </button>
+            </div>
           </div>
         </div>
       </div>
