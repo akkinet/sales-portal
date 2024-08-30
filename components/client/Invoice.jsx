@@ -8,6 +8,8 @@ const Invoice = ({ packages }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [customers, setCustomers] = useState([])
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [coupons, setCoupons] = useState([])
 
   const products = useMemo(
     () =>
@@ -24,6 +26,7 @@ const Invoice = ({ packages }) => {
         })),
     [packages]
   )
+
   const [rows, setRows] = useState([products[0]])
 
   const quantityOptions = [1, 2, 3, 4, 5]
@@ -111,13 +114,26 @@ const Invoice = ({ packages }) => {
     else setName('')
   }
 
-  const totalAmount = useMemo(() =>
-    rows.reduce((total, row) => total + row.price * row.quantity, 0),
-    [rows]
-  )
+  const totalAmount = useMemo(() => {
+    const amount = rows.reduce((total, row) => total + row.price * row.quantity, 0)
+    return appliedCoupon ? amount * (1 - appliedCoupon.percent_off / 100) : amount
+  }, [rows, appliedCoupon])
 
-  const handleCoupons = () =>{
-    
+  const handleCoupons = async () => {
+    if (appliedCoupon) {
+      setAppliedCoupon(null)
+      toast.success('Coupon removed successfully!', { position: 'top center' })
+      return
+    }
+
+    const response = await fetch('http://localhost:3000/api/coupon')
+    const data = await response.json()
+    setCoupons(data)
+
+    // Assuming you want to apply the first coupon for simplicity
+    const couponToApply = data[0] // Adjust logic based on user input or other criteria
+    setAppliedCoupon(couponToApply)
+    toast.success(`Coupon applied: ${couponToApply.percent_off}% off`, { position: 'top center' })
   }
 
   return (
@@ -207,28 +223,20 @@ const Invoice = ({ packages }) => {
                           className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
                           value={row.id}
                           onChange={e => handleProductChange(index, e.target.value)}
-                          title={`Features:\n${row.features}${row?.metadata ? "\n\nMetadata:\n" + Object.entries(row.metadata || {}).map(([key, value]) => `${key}: ${value}`).join('\n') : ""}`}
                         >
                           {products.map(product => (
-                            <option
-                              key={product.id}
-                              value={product.id}
-                              disabled={rows.some(r => r.id === product.id)}
-                            >
+                            <option key={product.id} value={product.id}>
                               {product.name}
                             </option>
                           ))}
                         </select>
                       </td>
-                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
-                        <div className='flex justify-center items-center'>
-                          <span className='text-xl'>$</span>
-                          <span className='text-lg sm:text-xl lg:text-2xl'>{row.price}</span>
-                        </div>
+                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>
+                        ${row.price.toFixed(2)}
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
-                          className='w-full text-sm sm:text-lg lg:text-xl lg:p-1 sm:p-0 rounded-md hide-arrow lg: text-center'
+                          className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
                           value={row.quantity}
                           onChange={e => handleQtyChange(index, e.target.value)}
                         >
@@ -241,10 +249,10 @@ const Invoice = ({ packages }) => {
                       </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <button
-                          className='bg-red-500 text-white p-2 rounded-md'
+                          className='text-red-600 text-xl md:text-2xl lg:text-3xl'
                           onClick={() => handleRemove(index)}
                         >
-                          <RiDeleteBin6Line size={20} />
+                          <RiDeleteBin6Line />
                         </button>
                       </td>
                     </tr>
@@ -252,31 +260,43 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='flex items-center lg:justify-between p-4 lg:p-6'>
-              <div>
-                <button
-                  className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
-                  onClick={handleAddRow}
-                >
-                  Add Row
-                </button>
-                <button
-                  className=' py-2 px-4  ml-2 text-cyan-600 hover:text-pink-500 lg:text-xl'
-                  // onclick={handleCoupons}
-                >
-                  Apply Coupons
-                </button>
-              </div>
-              <div className='text-xl sm:text-2xl lg:text-3xl font-bold lg:ml-0 sm: ml-5'>
-                <span className='font-semibold'>Total Amount:</span> ${totalAmount.toFixed(2)}
-              </div>
-              <button
-                className='bg-cyan-600 text-white py-2 px-4 rounded-lg'
-                onClick={generateInvoice}
-              >
-                Send Invoice
-              </button>
-            </div>
+            <div className='p-4 lg:p-6 lg:py-4'>
+  <div className='flex flex-col lg:flex-row items-center justify-between'>
+    <div className='flex items-center'>
+      <button
+        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+        onClick={handleAddRow}
+      >
+        Add Row
+      </button>
+      <button
+        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 lg:ml-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+        onClick={handleCoupons}
+      >
+        {appliedCoupon ? 'Remove Coupon' : 'Apply Coupon'}
+      </button>
+    </div>
+
+    <div className='flex flex-col lg:flex-row items-center justify-center lg:justify-between w-full mt-4 lg:mt-0'>
+      <div className='text-lg sm:text-xl lg:text-2xl'>
+        Total Amount: ${totalAmount.toFixed(2)}
+        {appliedCoupon && (
+          <span className='text-red-600 text-sm lg:text-lg ml-2'>
+            ({appliedCoupon.percent_off}% off)
+          </span>
+        )}
+      </div>
+      <button
+        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700 mt-4 lg:mt-0'
+        onClick={generateInvoice}
+      >
+        Generate Invoice
+      </button>
+    </div>
+  </div>
+</div>
+
+           
           </div>
         </div>
       </div>
