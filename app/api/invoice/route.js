@@ -5,7 +5,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 export const POST = async (req) => {
   try {
-    const { name, email, products } = await req.json();
+    const { name, email, products, coupon } = await req.json();
     const customers = await stripe.customers.search({
       query: `email:'${email}'`,
     });
@@ -22,7 +22,7 @@ export const POST = async (req) => {
     const due_date = new Date();
     due_date.setDate(due_date.getDate() + 2);
 
-    const invoice = await stripe.invoices.create({
+    const invoiceObj = {
       currency: "usd",
       auto_advance: true,
       due_date,
@@ -30,7 +30,12 @@ export const POST = async (req) => {
       description:
         "Harness the future of innovation and efficiency with our cutting-edge solutions",
       collection_method: "send_invoice",
-    });
+    }
+
+    if(coupon)
+      invoiceObj.discounts = [{coupon}]
+
+    const invoice = await stripe.invoices.create(invoiceObj);
 
     console.log("Invoice created:", invoice.id);
 
@@ -41,6 +46,7 @@ export const POST = async (req) => {
         quantity: item.quantity,
         customer: customer.id,
         currency: "usd",
+        discountable: true,
         price_data: {
           currency: "usd",
           product: item.id,
@@ -51,7 +57,7 @@ export const POST = async (req) => {
     }
 
     const sentInvoice = await stripe.invoices.sendInvoice(invoice.id);
-    console.log(sentInvoice)
+    console.log(sentInvoice);
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -140,7 +146,9 @@ export const POST = async (req) => {
                 <p><strong>Due Date:</strong> ${new Date(
                   sentInvoice.due_date * 1000
                 ).toLocaleString()}</p>
-                <p><strong>Amount Due:</strong> ${parseInt(sentInvoice.amount_due)/100}</p>
+                <p><strong>Amount Due:</strong> ${
+                  parseInt(sentInvoice.amount_due) / 100
+                }</p>
             </div>
 
             <div class="payment-link">
