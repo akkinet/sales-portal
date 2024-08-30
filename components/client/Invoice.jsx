@@ -189,7 +189,7 @@ const Invoice = ({ packages }) => {
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
         <div
-          className='create-invoice w-full max-w-[80vw] p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
+          className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
           style={{
             background: 'rgba(255, 255, 255, 0.3)',
             backdropFilter: 'blur(10px)',
