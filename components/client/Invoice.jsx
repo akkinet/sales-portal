@@ -116,6 +116,10 @@ const Invoice = ({ packages }) => {
     [rows]
   )
 
+  const handleCoupons = () =>{
+    
+  }
+
   return (
     <>
       <Toaster />
