@@ -370,7 +370,7 @@ const Invoice = ({ packages, coupons }) => {
                       onClick={generateInvoice}
                       ref={submitRef}
                     >
-                      Generate Invoice
+                      Send Invoice
                     </button>
                   </div>
                   <div className="text-lg sm:text-xl lg:text-2xl font-medium mb-4 lg:mb-0">
