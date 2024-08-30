@@ -260,42 +260,43 @@ const Invoice = ({ packages }) => {
                 </tbody>
               </table>
             </div>
-            <div className='p-4 lg:p-6 lg:py-4'>
-  <div className='flex flex-col lg:flex-row items-center justify-between'>
-    <div className='flex items-center'>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-        onClick={handleAddRow}
-      >
-        Add Row
-      </button>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 lg:ml-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-        onClick={handleCoupons}
-      >
-        {appliedCoupon ? 'Remove Coupon' : 'Apply Coupon'}
-      </button>
-    </div>
+            <div className='p-4 lg:p-6 lg:py-0'>
+              <div className='flex  items-center justify-between'>
+               <div className='left '>
+               <button
+                  className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+                  onClick={handleAddRow}
+                >
+                  Add Row
+                </button>
+                <button
+                  className='text-lg sm:text-xl lg:text-2xl py-2 px-4 lg:ml-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+                  onClick={handleCoupons}
+                >
+                  {appliedCoupon ? 'Remove Coupon' : 'Apply Coupon'}
+                </button>
+               </div>
+                <div className=' right p-4 lg:p-6 flex justify-between items-center'>
+              <div className='text-lg sm:text-xl lg:text-2xl font-medium'>
+                Total Amount: ${totalAmount.toFixed(2)}
+                {appliedCoupon && (
+                  <span className='text-red-600 text-sm lg:text-lg ml-2'>
+                    ({appliedCoupon.percent_off}% off)
+                  </span>
+                )}
+              </div>
+              <button
+                className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
+                onClick={generateInvoice}
+              >
+                Generate Invoice
+              </button>
 
-    <div className='flex flex-col lg:flex-row items-center justify-center lg:justify-between w-full mt-4 lg:mt-0'>
-      <div className='text-lg sm:text-xl lg:text-2xl'>
-        Total Amount: ${totalAmount.toFixed(2)}
-        {appliedCoupon && (
-          <span className='text-red-600 text-sm lg:text-lg ml-2'>
-            ({appliedCoupon.percent_off}% off)
-          </span>
-        )}
-      </div>
-      <button
-        className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700 mt-4 lg:mt-0'
-        onClick={generateInvoice}
-      >
-        Generate Invoice
-      </button>
-    </div>
-  </div>
-</div>
+            </div>
 
+              </div>
+              
+            </div>
            
           </div>
         </div>
