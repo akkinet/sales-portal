@@ -20,7 +20,7 @@ const Invoice = ({ packages }) => {
           id: p.id,
           name: p.name,
           features: p.features,
-          metadata: p.metadata,  // Added metadata
+          metadata: p.metadata, // Added metadata
           price: p.price,
           quantity: 1
         })),
@@ -115,8 +115,13 @@ const Invoice = ({ packages }) => {
   }
 
   const totalAmount = useMemo(() => {
-    const amount = rows.reduce((total, row) => total + row.price * row.quantity, 0)
-    return appliedCoupon ? amount * (1 - appliedCoupon.percent_off / 100) : amount
+    const amount = rows.reduce(
+      (total, row) => total + row.price * row.quantity,
+      0
+    )
+    return appliedCoupon
+      ? amount * (1 - appliedCoupon.percent_off / 100)
+      : amount
   }, [rows, appliedCoupon])
 
   const handleCoupons = async () => {
@@ -129,11 +134,12 @@ const Invoice = ({ packages }) => {
     const response = await fetch('http://localhost:3000/api/coupon')
     const data = await response.json()
     setCoupons(data)
-
-    // Assuming you want to apply the first coupon for simplicity
-    const couponToApply = data[0] // Adjust logic based on user input or other criteria
+    // coupons handler to handle the coupons and manipulate the actual prices of the package
+    const couponToApply = data[0] 
     setAppliedCoupon(couponToApply)
-    toast.success(`Coupon applied: ${couponToApply.percent_off}% off`, { position: 'top center' })
+    toast.success(`Coupon applied: ${couponToApply.percent_off}% off`, {
+      position: 'top center'
+    })
   }
 
   return (
@@ -153,20 +159,26 @@ const Invoice = ({ packages }) => {
         <Header />
       </div>
       <div className="invoice-container flex items-center justify-center min-h-screen bg-cover bg-[url('https://res.cloudinary.com/dduiqwdtr/image/upload/v1723017827/Hexerve%20website%20assets/w2wumqgvwfuc3evxzefw.jpg')]">
-        <div className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
+        <div
+          className='create-invoice w-full max-w-6xl p-4 lg:p-6 rounded-lg shadow-lg lg:mt-16 z-150 sm: m-4'
           style={{
             background: 'rgba(255, 255, 255, 0.3)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(255, 255, 255, 0.2)'
           }}
         >
           <div className='bg-white rounded-lg'>
             <div className='text-center bg-cyan-600 text-white py-4 rounded-t-lg'>
-              <h1 className='text-2xl sm:text-3xl lg:text-5xl font-mono font-bold'>Create Invoice</h1>
+              <h1 className='text-2xl sm:text-3xl lg:text-5xl font-mono font-bold'>
+                Create Invoice
+              </h1>
             </div>
             <div className='flex flex-col lg:flex-row items-center justify-between p-4 lg:p-6'>
               <div className='w-full mb-4 lg:mb-0 lg:mr-4'>
-                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='name'>
+                <label
+                  className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold'
+                  htmlFor='name'
+                >
                   Client's Name:
                 </label>
                 <input
@@ -183,7 +195,10 @@ const Invoice = ({ packages }) => {
                 </datalist>
               </div>
               <div className='w-full'>
-                <label className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold' htmlFor='email'>
+                <label
+                  className='block text-lg sm:text-xl lg:text-2xl mb-2 font-bold'
+                  htmlFor='email'
+                >
                   Client's Email:
                 </label>
                 <input
@@ -201,28 +216,44 @@ const Invoice = ({ packages }) => {
               </div>
             </div>
             <div className='text-center bg-cyan-600 text-white py-4'>
-              <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>Product List</h1>
+              <h1 className='text-xl sm:text-2xl lg:text-4xl font-mono'>
+                Product List
+              </h1>
             </div>
             <div className='p-4 lg:p-6 lg:pt-1 overflow-auto max-h-[225px]'>
               <table className='w-full text-left border-separate border-spacing-2'>
                 <thead>
                   <tr>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Sno.</th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Product Name</th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Price</th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Qty</th>
-                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>Remove item</th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
+                      Sno.
+                    </th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
+                      Product Name
+                    </th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
+                      Price
+                    </th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
+                      Qty
+                    </th>
+                    <th className='border-b-2 border-pink-600 text-sm sm:text-lg lg:text-2xl py-2'>
+                      Remove item
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {rows.map((row, index) => (
                     <tr key={row.id}>
-                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>{index + 1}.</td>
+                      <td className='border-b-2 border-pink-600 text-center py-2 pt-0 text-xl'>
+                        {index + 1}.
+                      </td>
                       <td className='border-b-2 border-pink-600 text-center py-2 pt-0'>
                         <select
                           className='w-full text-sm md:text-xl lg:text-xl p-1 rounded-md hide-arrow'
                           value={row.id}
-                          onChange={e => handleProductChange(index, e.target.value)}
+                          onChange={e =>
+                            handleProductChange(index, e.target.value)
+                          }
                         >
                           {products.map(product => (
                             <option key={product.id} value={product.id}>
@@ -262,42 +293,38 @@ const Invoice = ({ packages }) => {
             </div>
             <div className='p-4 lg:p-6 lg:py-0'>
               <div className='flex  items-center justify-between'>
-               <div className='left '>
-               <button
-                  className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-                  onClick={handleAddRow}
-                >
-                  Add Row
-                </button>
-                <button
-                  className='text-lg sm:text-xl lg:text-2xl py-2 px-4 lg:ml-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
-                  onClick={handleCoupons}
-                >
-                  {appliedCoupon ? 'Remove Coupon' : 'Apply Coupon'}
-                </button>
-               </div>
+                <div className='left '>
+                  <button
+                    className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+                    onClick={handleAddRow}
+                  >
+                    Add Row
+                  </button>
+                  <button
+                    className='text-lg sm:text-xl lg:text-2xl py-2 px-4 lg:ml-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-cyan-700'
+                    onClick={handleCoupons}
+                  >
+                    {appliedCoupon ? 'Remove Coupon' : 'Apply Coupon'}
+                  </button>
+                </div>
                 <div className=' right p-4 lg:p-6 flex justify-between items-center'>
-              <div className='text-lg sm:text-xl lg:text-2xl font-medium'>
-                Total Amount: ${totalAmount.toFixed(2)}
-                {appliedCoupon && (
-                  <span className='text-red-600 text-sm lg:text-lg ml-2'>
-                    ({appliedCoupon.percent_off}% off)
-                  </span>
-                )}
+                  <div className='text-lg sm:text-xl lg:text-2xl font-medium'>
+                    Total Amount: ${totalAmount.toFixed(2)}
+                    {appliedCoupon && (
+                      <span className='text-red-600 text-sm lg:text-lg ml-2'>
+                        ({appliedCoupon.percent_off}% off)
+                      </span>
+                    )}
+                  </div>
+                  <button
+                    className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
+                    onClick={generateInvoice}
+                  >
+                    Generate Invoice
+                  </button>
+                </div>
               </div>
-              <button
-                className='text-lg sm:text-xl lg:text-2xl py-2 px-4 bg-cyan-600 text-white rounded-md shadow-md hover:bg-green-700'
-                onClick={generateInvoice}
-              >
-                Generate Invoice
-              </button>
-
             </div>
-
-              </div>
-              
-            </div>
-           
           </div>
         </div>
       </div>
