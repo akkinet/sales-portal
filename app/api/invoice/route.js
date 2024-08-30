@@ -146,7 +146,7 @@ export const POST = async (req) => {
                 <p><strong>Due Date:</strong> ${new Date(
                   sentInvoice.due_date * 1000
                 ).toLocaleString()}</p>
-                <p><strong>Amount Due:</strong> ${
+                <p><strong>Amount Due:</strong>$${
                   parseInt(sentInvoice.amount_due) / 100
                 }</p>
             </div>
